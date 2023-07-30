@@ -56,4 +56,33 @@ unset REPL REPLHISTFILE
 if [ -f "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
 EOF
 
+cat << EOF > ~/.zlogout
+rm -f "\$HOME/.lesshst"
+
+for REPL in lldb lua; do
+        REPLHISTFILE="\$HOME/.lldb/\$REPL-widehistory"
+        if [[ -s "\$REPLHISTFILE" ]]; then
+                : > "\$REPLHISTFILE"
+        fi
+done
+
+if [[ -f "\$HOME/.zlogout_local" ]]; then . "\$HOME/.zlogout_local"; fi
+EOF
+
+cat << EOF > ~/.zprofile
+export EDITOR=vi
+export PAGER=less
+
+# Query terminal size; useful for serial links.
+if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
+EOF
+
+cat << EOF > ~/.zshrc
+export LESSHISTFILE=-
+
+if [[ -f "\$HOME/.zshrc_local" ]]; then . "\$HOME/.zshrc_local"; fi
+EOF
+
+rm -f ~/.cshrc ~/.login
+
 printf 'done\n'

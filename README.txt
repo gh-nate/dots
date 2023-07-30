@@ -1,4 +1,7 @@
 gh-nate's dotfiles
 
-- Focused solely on setting up a development command line environment.
-- Does not setup any programming languages.
+- Focused solely on setting up a minimal command line environment.
+
+prerequisites
+
+  # pkg install tmux zsh
