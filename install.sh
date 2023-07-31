@@ -78,7 +78,13 @@ if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
 EOF
 
 cat << EOF > ~/.zshrc
+autoload -U compinit
+compinit
+
 export LESSHISTFILE=-
+
+setopt interactive_comments
+setopt print_exit_value
 
 if [[ -f "\$HOME/.zshrc_local" ]]; then . "\$HOME/.zshrc_local"; fi
 EOF
