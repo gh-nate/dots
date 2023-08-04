@@ -45,13 +45,8 @@ rm -f "\$HOME/.sh_history"
 export LESSHISTFILE=-
 rm -f "\$HOME/.lesshst"
 
-for REPL in lldb lua; do
-        REPLHISTFILE="\$HOME/.lldb/\$REPL-widehistory"
-        if [ -s "\$REPLHISTFILE" ]; then
-                : > "\$REPLHISTFILE"
-        fi
-done
-unset REPL REPLHISTFILE
+for REPL in lldb lua; do truncate -c -s 0 "\$HOME/.lldb/\$REPL-widehistory"; done
+unset REPL
 
 if [ -f "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
 EOF
@@ -59,12 +54,7 @@ EOF
 cat << EOF > ~/.zlogout
 rm -f "\$HOME/.lesshst"
 
-for REPL in lldb lua; do
-        REPLHISTFILE="\$HOME/.lldb/\$REPL-widehistory"
-        if [[ -s "\$REPLHISTFILE" ]]; then
-                : > "\$REPLHISTFILE"
-        fi
-done
+for REPL in lldb lua; do truncate -c -s 0 "\$HOME/.lldb/\$REPL-widehistory"; done
 
 if [[ -f "\$HOME/.zlogout_local" ]]; then . "\$HOME/.zlogout_local"; fi
 EOF
