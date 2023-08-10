@@ -39,6 +39,8 @@ if [ -x /usr/bin/resizewin ]; then /usr/bin/resizewin -z; fi
 EOF
 
 cat << EOF > ~/.shrc
+alias ll='ls -hAlp'
+
 HISTFILE=
 rm -f "\$HOME/.sh_history"
 
@@ -68,6 +70,8 @@ if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
 EOF
 
 cat << EOF > ~/.zshrc
+alias ll='ls -hAlp'
+
 autoload -U compinit
 compinit
 
