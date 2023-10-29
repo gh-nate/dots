@@ -75,6 +75,8 @@ alias ll='ls -hAlp'
 autoload -U compinit
 compinit
 
+bindkey -e
+
 export LESSHISTFILE=-
 
 setopt interactive_comments
