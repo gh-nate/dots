@@ -66,6 +66,8 @@ export PAGER=less
 
 # Query terminal size; useful for serial links.
 if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
+
+if [[ -f "\$HOME/.zprofile_local" ]]; then . "\$HOME/.zprofile_local"; fi
 EOF
 
 cat << EOF > ~/.zshrc
