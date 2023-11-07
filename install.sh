@@ -49,7 +49,7 @@ rm -f "\$HOME/.lesshst"
 
 truncate -c -s 0 "\$HOME/.lldb/lldb-widehistory" "\$HOME/.lldb/lua-widehistory"
 
-if [ -f "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
+if [ -r "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
 EOF
 
 cat << EOF > ~/.zlogout
@@ -57,7 +57,7 @@ rm -f "\$HOME/.lesshst"
 
 truncate -c -s 0 "\$HOME"/.lldb/{lldb,lua}-widehistory
 
-if [[ -f "\$HOME/.zlogout_local" ]]; then . "\$HOME/.zlogout_local"; fi
+if [[ -r "\$HOME/.zlogout_local" ]]; then . "\$HOME/.zlogout_local"; fi
 EOF
 
 cat << EOF > ~/.zprofile
@@ -67,7 +67,7 @@ export PAGER=less
 # Query terminal size; useful for serial links.
 if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
 
-if [[ -f "\$HOME/.zprofile_local" ]]; then . "\$HOME/.zprofile_local"; fi
+if [[ -r "\$HOME/.zprofile_local" ]]; then . "\$HOME/.zprofile_local"; fi
 EOF
 
 cat << EOF > ~/.zshrc
@@ -83,7 +83,7 @@ export LESSHISTFILE=-
 setopt interactive_comments
 setopt print_exit_value
 
-if [[ -f "\$HOME/.zshrc_local" ]]; then . "\$HOME/.zshrc_local"; fi
+if [[ -r "\$HOME/.zshrc_local" ]]; then . "\$HOME/.zshrc_local"; fi
 EOF
 
 rm -f ~/.cshrc ~/.login
