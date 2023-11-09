@@ -10,3 +10,7 @@ recommended prerequisites
 install
 
   % fetch -o - https://github.com/gh-nate/dots/raw/main/install.sh | sh
+
+optional
+
+  # pkg install rubygem-irb 
