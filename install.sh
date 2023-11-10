@@ -36,6 +36,8 @@ export PAGER=less
 
 # Query terminal size; useful for serial links.
 if [ -x /usr/bin/resizewin ]; then /usr/bin/resizewin -z; fi
+
+if [ -r "\$HOME/.profile_local" ]; then . "\$HOME/.profile_local"; fi
 EOF
 
 cat << EOF > ~/.shrc
