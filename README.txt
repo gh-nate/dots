@@ -1,7 +1,7 @@
 gh-nate's dotfiles
 
 - Focused solely on setting up a minimal command line environment.
-- Everything in a single file for an easier download.
+- Everything essential in a single file for an easier download.
 
 recommended prerequisites
 
@@ -13,4 +13,6 @@ install
 
 optional
 
-  # pkg install git-lite rubygem-irb vim
+  # pkg install git-lite    # install_git.sh
+  # pkg install rubygem-irb # install_ruby.sh
+  # pkg install vim         # install_vim.sh
