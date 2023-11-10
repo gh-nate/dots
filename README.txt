@@ -13,4 +13,4 @@ install
 
 optional
 
-  # pkg install rubygem-irb 
+  # pkg install git-lite rubygem-irb
