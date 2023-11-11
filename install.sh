@@ -22,10 +22,10 @@
 
 set -e
 
-while getopts ghrv o; do
+while getopts ghiv o; do
 	case "$o" in
 		g) INSTALL_GIT=1 ;;
-		r) INSTALL_RUBY=1 ;;
+		i) INSTALL_IRB=1 ;;
 		v) INSTALL_VIM=1 ;;
 		h|?) HELP=1 ;;
 	esac
@@ -33,11 +33,11 @@ done
 
 if [ "$HELP" ]; then
 	cat <<- EOF
-	usage: install.sh [-g] [-h] [-r] [-v]
+	usage: install.sh [-g] [-h] [-i] [-v]
 
 	-g install git configuration
 	-h print this help text
-	-r install ruby configuration
+	-i install irb configuration
 	-v install vim configuration
 	EOF
 	exit 129
@@ -82,11 +82,11 @@ if [ "$INSTALL_GIT" ]; then
 	chmod +x "$BIN/git-zap"
 fi
 
-if [ -z "$INSTALL_RUBY" ] && [ -x /usr/local/bin/irb ]; then
-	INSTALL_RUBY=1
+if [ -z "$INSTALL_IRB" ] && [ -x /usr/local/bin/irb ]; then
+	INSTALL_IRB=1
 fi
 
-if [ "$INSTALL_RUBY" ]; then
+if [ "$INSTALL_IRB" ]; then
 	cat <<- EOF > ~/.irbrc
 	IRB.conf[:PROMPT_MODE] = :SIMPLE
 	IRB.conf[:SAVE_HISTORY] = nil
