@@ -22,6 +22,103 @@
 
 set -e
 
+while getopts ghrv o; do
+	case "$o" in
+		g) INSTALL_GIT=1 ;;
+		r) INSTALL_RUBY=1 ;;
+		v) INSTALL_VIM=1 ;;
+		h|?) HELP=1 ;;
+	esac
+done
+
+if [ "$HELP" ]; then
+	cat <<- EOF
+	usage: install.sh [-g] [-h] [-r] [-v]
+
+	-g install git configuration
+	-h print this help text
+	-r install ruby configuration
+	-v install vim configuration
+	EOF
+	exit 129
+fi
+
+if [ "$INSTALL_GIT" ]; then
+	git config --global alias.fresh 'commit --amend --date=now'
+	git config --global alias.lol 'log --oneline'
+
+	BIN="$HOME/bin"
+	if [ ! -d "$BIN" ]; then mkdir "$BIN"; fi
+
+	cat <<- EOF > "$BIN/git-new"
+	set -e
+
+	git switch -c "\$1"
+	git push -u origin "\$1"
+	EOF
+	chmod +x "$BIN/git-new"
+
+	cat <<- EOF > "$BIN/git-supplant"
+	set -e
+
+	git push -d origin "\$(git rev-parse --abbrev-ref HEAD)"
+	git branch --unset-upstream
+	git branch -D "\$1"
+	git branch -M "\$1"
+	git push --force --set-upstream origin "\$1"
+	EOF
+	chmod +x "$BIN/git-supplant"
+
+	cat <<- EOF > "$BIN/git-zap"
+	set -e
+
+	git branch -D "\$@"
+	git push -d origin "\$@"
+	EOF
+	chmod +x "$BIN/git-zap"
+fi
+
+if [ "$INSTALL_RUBY" ]; then
+	cat <<- EOF > ~/.irbrc
+	IRB.conf[:PROMPT_MODE] = :SIMPLE
+	IRB.conf[:SAVE_HISTORY] = nil
+
+	class Integer
+	  def bin(human_readable = false)
+	    result = to_s(2)
+	    human_readable ? result.chunk : result
+	  end
+	  def hex(human_readable = false)
+	    result = to_s(16)
+	    human_readable ? result.chunk : result
+	  end
+	end
+
+	class String
+	  def chunk
+	    zfill(4)
+	    (1...length / 4).each { |n| insert(n * 4 + n - 1, " ") }
+	    self
+	  end
+	  def zfill(n)
+	    remainder = length % n
+	    remainder.zero? ? self : prepend("0" * (n - remainder))
+	  end
+	end
+	EOF
+fi
+
+if [ "$INSTALL_VIM" ]; then
+	CONFIG="$HOME/.vim"
+	if [ ! -d "$CONFIG" ]; then mkdir "$CONFIG"; fi
+
+	cat <<- EOF > "$CONFIG/vimrc"
+	set splitbelow
+	set splitright
+	set viminfo=
+	EOF
+fi
+
 touch ~/.hushlogin
 
 cat << EOF > ~/.nexrc
