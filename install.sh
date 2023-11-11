@@ -43,6 +43,10 @@ if [ "$HELP" ]; then
 	exit 129
 fi
 
+if [ -z "$INSTALL_GIT" ] && [ -x /usr/local/bin/git ]; then
+	INSTALL_GIT=1
+fi
+
 if [ "$INSTALL_GIT" ]; then
 	git config --global alias.fresh 'commit --amend --date=now'
 	git config --global alias.lol 'log --oneline'
@@ -78,6 +82,10 @@ if [ "$INSTALL_GIT" ]; then
 	chmod +x "$BIN/git-zap"
 fi
 
+if [ -z "$INSTALL_RUBY" ] && [ -x /usr/local/bin/irb ]; then
+	INSTALL_RUBY=1
+fi
+
 if [ "$INSTALL_RUBY" ]; then
 	cat <<- EOF > ~/.irbrc
 	IRB.conf[:PROMPT_MODE] = :SIMPLE
@@ -106,6 +114,10 @@ if [ "$INSTALL_RUBY" ]; then
 	  end
 	end
 	EOF
+fi
+
+if [ -z "$INSTALL_VIM" ] && [ -x /usr/local/bin/vim ]; then
+	INSTALL_VIM=1
 fi
 
 if [ "$INSTALL_VIM" ]; then
