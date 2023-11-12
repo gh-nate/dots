@@ -163,6 +163,15 @@ truncate -c -s 0 "\$HOME/.lldb/lldb-widehistory" "\$HOME/.lldb/lua-widehistory"
 if [ -r "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
 EOF
 
+cat << EOF > ~/.tmux.conf
+bind -N 'Split window horizontally: 80-columns pane' '^' splitw -hl 80
+unbind C-z
+
+set -g renumber-windows on
+
+source -q ~/.tmux_local.conf
+EOF
+
 cat << EOF > ~/.zlogout
 rm -f "\$HOME/.lesshst"
 
