@@ -94,11 +94,13 @@ if [ "$INSTALL_IRB" ]; then
 	class Integer
 	  def bin(human_readable = false)
 	    result = to_s(2)
-	    human_readable ? result.chunk : result
+	    result.chunk if human_readable
+	    result
 	  end
 	  def hex(human_readable = false)
 	    result = to_s(16)
-	    human_readable ? result.chunk : result
+	    result.chunk if human_readable
+	    result
 	  end
 	end
 
@@ -106,7 +108,6 @@ if [ "$INSTALL_IRB" ]; then
 	  def chunk
 	    zfill(4)
 	    (1...length / 4).each { |n| insert(n * 4 + n - 1, " ") }
-	    self
 	  end
 	  def zfill(n)
 	    remainder = length % n
