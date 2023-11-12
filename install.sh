@@ -125,9 +125,15 @@ if [ "$INSTALL_VIM" ]; then
 	if [ ! -d "$CONFIG" ]; then mkdir "$CONFIG"; fi
 
 	cat <<- EOF > "$CONFIG/vimrc"
+	nnoremap q <Nop>
+	nnoremap K <Nop>
+
+	set nowrap
 	set splitbelow
 	set splitright
 	set viminfo=
+
+	runtime local.vim
 	EOF
 fi
 
