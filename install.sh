@@ -43,7 +43,27 @@ if [ "$HELP" ]; then
 	exit 129
 fi
 
-if [ -z "$INSTALL_GIT" ] && [ -x /usr/local/bin/git ]; then
+if [ -r /etc/os-release ]; then
+	# shellcheck disable=SC1091
+	. /etc/os-release
+fi
+
+case "$ID" in
+	freebsd)
+		PKGBIN='/usr/local/bin'
+		USRBIN="$HOME/bin"
+		;;
+	ubuntu)
+		PKGBIN='/usr/bin'
+		USRBIN="$HOME/.local/bin"
+		;;
+	*)
+		printf 'Unsupported OS\n' >&2
+		exit 1
+		;;
+esac
+
+if [ -z "$INSTALL_GIT" ] && [ -x "$PKGBIN/git" ]; then
 	INSTALL_GIT=1
 fi
 
@@ -51,18 +71,17 @@ if [ "$INSTALL_GIT" ]; then
 	git config --global alias.fresh 'commit --amend --date=now'
 	git config --global alias.lol 'log --oneline'
 
-	BIN="$HOME/bin"
-	if [ ! -d "$BIN" ]; then mkdir "$BIN"; fi
+	if [ ! -d "$USRBIN" ]; then mkdir -p "$USRBIN"; fi
 
-	cat <<- EOF > "$BIN/git-new"
+	cat <<- EOF > "$USRBIN/git-new"
 	set -e
 
 	git switch -c "\$1"
 	git push -u origin "\$1"
 	EOF
-	chmod +x "$BIN/git-new"
+	chmod +x "$USRBIN/git-new"
 
-	cat <<- EOF > "$BIN/git-supplant"
+	cat <<- EOF > "$USRBIN/git-supplant"
 	set -e
 
 	git push -d origin "\$(git rev-parse --abbrev-ref HEAD)"
@@ -71,18 +90,18 @@ if [ "$INSTALL_GIT" ]; then
 	git branch -M "\$1"
 	git push --force --set-upstream origin "\$1"
 	EOF
-	chmod +x "$BIN/git-supplant"
+	chmod +x "$USRBIN/git-supplant"
 
-	cat <<- EOF > "$BIN/git-zap"
+	cat <<- EOF > "$USRBIN/git-zap"
 	set -e
 
 	git branch -D "\$@"
 	git push -d origin "\$@"
 	EOF
-	chmod +x "$BIN/git-zap"
+	chmod +x "$USRBIN/git-zap"
 fi
 
-if [ -z "$INSTALL_IRB" ] && [ -x /usr/local/bin/irb ]; then
+if [ -z "$INSTALL_IRB" ] && [ -x "$PKGBIN/irb" ]; then
 	INSTALL_IRB=1
 fi
 
@@ -117,7 +136,7 @@ if [ "$INSTALL_IRB" ]; then
 	EOF
 fi
 
-if [ -z "$INSTALL_VIM" ] && [ -x /usr/local/bin/vim ]; then
+if [ -z "$INSTALL_VIM" ] && [ -x "$PKGBIN/vim" ]; then
 	INSTALL_VIM=1
 fi
 
@@ -138,37 +157,48 @@ if [ "$INSTALL_VIM" ]; then
 	EOF
 fi
 
+if [ "$ID" = ubuntu ]; then
+	if ! grep -q 'unset HISTFILE' ~/.bashrc; then
+		cat <<- EOF >> ~/.bashrc
+
+		unset HISTFILE
+		EOF
+	fi
+fi
+
 touch ~/.hushlogin
 
-cat << EOF > ~/.nexrc
-set autoindent
-set ruler
-EOF
+if [ "$ID" = freebsd ]; then
+	cat <<- EOF > ~/.nexrc
+	set autoindent
+	set ruler
+	EOF
 
-cat << EOF > ~/.profile
-export EDITOR=vi
-export ENV="\$HOME/.shrc"
-export PAGER=less
+	cat <<- EOF > ~/.profile
+	export EDITOR=vi
+	export ENV="\$HOME/.shrc"
+	export PAGER=less
 
-# Query terminal size; useful for serial links.
-if [ -x /usr/bin/resizewin ]; then /usr/bin/resizewin -z; fi
+	# Query terminal size; useful for serial links.
+	if [ -x /usr/bin/resizewin ]; then /usr/bin/resizewin -z; fi
 
-if [ -r "\$HOME/.profile_local" ]; then . "\$HOME/.profile_local"; fi
-EOF
+	if [ -r "\$HOME/.profile_local" ]; then . "\$HOME/.profile_local"; fi
+	EOF
 
-cat << EOF > ~/.shrc
-alias ll='ls -hAlp'
+	cat <<- EOF > ~/.shrc
+	alias ll='ls -hAlp'
 
-HISTFILE=
-rm -f "\$HOME/.sh_history"
+	HISTFILE=
+	rm -f "\$HOME/.sh_history"
 
-export LESSHISTFILE=-
-rm -f "\$HOME/.lesshst"
+	export LESSHISTFILE=-
+	rm -f "\$HOME/.lesshst"
 
-truncate -c -s 0 "\$HOME/.lldb/lldb-widehistory" "\$HOME/.lldb/lua-widehistory"
+	truncate -c -s 0 "\$HOME/.lldb/lldb-widehistory" "\$HOME/.lldb/lua-widehistory"
 
-if [ -r "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
-EOF
+	if [ -r "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
+	EOF
+fi
 
 cat << EOF > ~/.tmux.conf
 bind -N 'Split window horizontally: 80-columns pane' '^' splitw -hl 80
@@ -207,6 +237,21 @@ bindkey -e
 
 export LESSHISTFILE=-
 
+EOF
+
+if [ "$ID" = ubuntu ]; then
+	TAB=$(printf '\t')
+	cat <<- EOF >> ~/.zshrc
+	USRBIN="\$HOME/.local/bin"
+	if [[ -d "\$USRBIN" ]] && [[ ! "\$PATH" =~ "\$USRBIN" ]]; then
+	${TAB}export PATH="\$USRBIN:\$PATH"
+	fi
+	unset USRBIN
+
+	EOF
+fi
+
+cat << EOF >> ~/.zshrc
 setopt interactive_comments
 setopt print_exit_value
 
