@@ -53,7 +53,8 @@ case "$ID" in
 		PKGBIN='/usr/local/bin'
 		USRBIN="$HOME/bin"
 		;;
-	ubuntu)
+	debian|ubuntu)
+		ID='ubuntu'
 		PKGBIN='/usr/bin'
 		USRBIN="$HOME/.local/bin"
 		;;
@@ -159,7 +160,7 @@ if [ "$INSTALL_VIM" ]; then
 	EOF
 fi
 
-if [ "$ID" = ubuntu ]; then
+if [ "$ID" = ubuntu ] && [ -r ~/.bashrc ]; then
 	if ! grep -q 'unset HISTFILE' ~/.bashrc; then
 		cat <<- EOF >> ~/.bashrc
 
