@@ -148,6 +148,8 @@ if [ "$INSTALL_VIM" ]; then
 	nnoremap q <Nop>
 	nnoremap K <Nop>
 
+	set hlsearch
+	set incsearch
 	set nowrap
 	set splitbelow
 	set splitright
