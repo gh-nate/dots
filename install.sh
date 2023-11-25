@@ -156,6 +156,18 @@ if [ "$INSTALL_VIM" ]; then
 	set splitright
 	set viminfo=
 
+	EOF
+
+	if [ "$ID" = ubuntu ]; then
+		cat <<- EOF >> "$CONFIG/vimrc"
+		if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
+		  source /usr/share/doc/fzf/examples/fzf.vim
+		endif
+
+		EOF
+	fi
+
+	cat <<- EOF >> "$CONFIG/vimrc"
 	runtime local.vim
 	EOF
 fi
@@ -250,6 +262,11 @@ if [ "$ID" = ubuntu ]; then
 	${TAB}export PATH="\$USRBIN:\$PATH"
 	fi
 	unset USRBIN
+
+	if [[ -d /usr/share/doc/fzf/examples ]]; then
+	${TAB}. /usr/share/doc/fzf/examples/completion.zsh
+	${TAB}. /usr/share/doc/fzf/examples/key-bindings.zsh
+	fi
 
 	EOF
 fi

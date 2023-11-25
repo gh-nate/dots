@@ -15,5 +15,5 @@ install
 
 optional
 
-  # apt install git ruby vim
+  # apt install fzf git ruby vim
   # pkg install git-lite rubygem-irb vim
