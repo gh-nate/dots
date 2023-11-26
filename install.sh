@@ -22,23 +22,21 @@
 
 set -e
 
-while getopts ghiv o; do
+while getopts ghi o; do
 	case "$o" in
 		g) INSTALL_GIT=1 ;;
 		i) INSTALL_IRB=1 ;;
-		v) INSTALL_VIM=1 ;;
 		h|?) HELP=1 ;;
 	esac
 done
 
 if [ "$HELP" ]; then
 	cat <<- EOF
-	usage: install.sh [-g] [-h] [-i] [-v]
+	usage: install.sh [-g] [-h] [-i]
 
-	-g install git configuration
+	-g force git configuration
 	-h print this help text
-	-i install irb configuration
-	-v install vim configuration
+	-i force irb configuration
 	EOF
 	exit 129
 fi
@@ -49,22 +47,17 @@ if [ -r /etc/os-release ]; then
 fi
 
 case "$ID" in
-	freebsd)
-		PKGBIN='/usr/local/bin'
-		USRBIN="$HOME/bin"
-		;;
 	debian|ubuntu)
-		ID='ubuntu'
-		PKGBIN='/usr/bin'
 		USRBIN="$HOME/.local/bin"
 		;;
 	*)
-		printf 'Unsupported OS\n' >&2
+		if [ -z "$ID" ]; then ID=Unknown; fi
+		printf 'Unsupported OS: %s\n' "$ID" >&2
 		exit 1
 		;;
 esac
 
-if [ -z "$INSTALL_GIT" ] && [ -x "$PKGBIN/git" ]; then
+if [ -z "$INSTALL_GIT" ] && [ -x /usr/bin/git ]; then
 	INSTALL_GIT=1
 fi
 
@@ -102,7 +95,7 @@ if [ "$INSTALL_GIT" ]; then
 	chmod +x "$USRBIN/git-zap"
 fi
 
-if [ -z "$INSTALL_IRB" ] && [ -x "$PKGBIN/irb" ]; then
+if [ -z "$INSTALL_IRB" ] && [ -x /usr/bin/irb ]; then
 	INSTALL_IRB=1
 fi
 
@@ -137,42 +130,7 @@ if [ "$INSTALL_IRB" ]; then
 	EOF
 fi
 
-if [ -z "$INSTALL_VIM" ] && [ -x "$PKGBIN/vim" ]; then
-	INSTALL_VIM=1
-fi
-
-if [ "$INSTALL_VIM" ]; then
-	CONFIG="$HOME/.vim"
-	if [ ! -d "$CONFIG" ]; then mkdir "$CONFIG"; fi
-
-	cat <<- EOF > "$CONFIG/vimrc"
-	nnoremap q <Nop>
-	nnoremap K <Nop>
-
-	set hlsearch
-	set incsearch
-	set nowrap
-	set splitbelow
-	set splitright
-	set viminfo=
-
-	EOF
-
-	if [ "$ID" = ubuntu ]; then
-		cat <<- EOF >> "$CONFIG/vimrc"
-		if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
-		  source /usr/share/doc/fzf/examples/fzf.vim
-		endif
-
-		EOF
-	fi
-
-	cat <<- EOF >> "$CONFIG/vimrc"
-	runtime local.vim
-	EOF
-fi
-
-if [ "$ID" = ubuntu ] && [ -r ~/.bashrc ]; then
+if [ -r ~/.bashrc ]; then
 	if ! grep -q 'unset HISTFILE' ~/.bashrc; then
 		cat <<- EOF >> ~/.bashrc
 
@@ -183,38 +141,6 @@ fi
 
 touch ~/.hushlogin
 
-if [ "$ID" = freebsd ]; then
-	cat <<- EOF > ~/.nexrc
-	set autoindent
-	set ruler
-	EOF
-
-	cat <<- EOF > ~/.profile
-	export EDITOR=vi
-	export ENV="\$HOME/.shrc"
-	export PAGER=less
-
-	# Query terminal size; useful for serial links.
-	if [ -x /usr/bin/resizewin ]; then /usr/bin/resizewin -z; fi
-
-	if [ -r "\$HOME/.profile_local" ]; then . "\$HOME/.profile_local"; fi
-	EOF
-
-	cat <<- EOF > ~/.shrc
-	alias ll='ls -hAlp'
-
-	HISTFILE=
-	rm -f "\$HOME/.sh_history"
-
-	export LESSHISTFILE=-
-	rm -f "\$HOME/.lesshst"
-
-	truncate -c -s 0 "\$HOME/.lldb/lldb-widehistory" "\$HOME/.lldb/lua-widehistory"
-
-	if [ -r "\$HOME/.shrc_local" ]; then . "\$HOME/.shrc_local"; fi
-	EOF
-fi
-
 cat << EOF > ~/.tmux.conf
 bind -N 'Split window horizontally: 80-columns pane' '^' splitw -hl 80
 unbind C-z
@@ -224,22 +150,38 @@ set -g renumber-windows on
 source -q ~/.tmux_local.conf
 EOF
 
+VIMCONFIG="$HOME/.vim"
+if [ ! -d "$VIMCONFIG" ]; then mkdir "$VIMCONFIG"; fi
+
+cat << EOF > "$VIMCONFIG/vimrc"
+nnoremap q <Nop>
+nnoremap K <Nop>
+
+set hlsearch
+set incsearch
+set nowrap
+set splitbelow
+set splitright
+set viminfo=
+
+if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
+  source /usr/share/doc/fzf/examples/fzf.vim
+endif
+
+runtime local.vim
+EOF
+
 cat << EOF > ~/.zlogout
-rm -f "\$HOME/.lesshst"
+rm -f ~/.bash_history ~/.lesshst
 
-truncate -c -s 0 "\$HOME"/.lldb/{lldb,lua}-widehistory
-
-if [[ -r "\$HOME/.zlogout_local" ]]; then . "\$HOME/.zlogout_local"; fi
+if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
 
 cat << EOF > ~/.zprofile
 export EDITOR=vi
 export PAGER=less
 
-# Query terminal size; useful for serial links.
-if [[ -x /usr/bin/resizewin ]]; then /usr/bin/resizewin -z; fi
-
-if [[ -r "\$HOME/.zprofile_local" ]]; then . "\$HOME/.zprofile_local"; fi
+if [[ -r ~/.zprofile_local ]]; then . ~/.zprofile_local; fi
 EOF
 
 cat << EOF > ~/.zshrc
@@ -252,32 +194,19 @@ bindkey -e
 
 export LESSHISTFILE=-
 
-EOF
-
-if [ "$ID" = ubuntu ]; then
-	TAB=$(printf '\t')
-	cat <<- EOF >> ~/.zshrc
-	USRBIN="\$HOME/.local/bin"
-	if [[ -d "\$USRBIN" ]] && [[ ! "\$PATH" =~ "\$USRBIN" ]]; then
-	${TAB}export PATH="\$USRBIN:\$PATH"
-	fi
-	unset USRBIN
-
-	if [[ -d /usr/share/doc/fzf/examples ]]; then
-	${TAB}. /usr/share/doc/fzf/examples/completion.zsh
-	${TAB}. /usr/share/doc/fzf/examples/key-bindings.zsh
-	fi
-
-	EOF
+if [[ -d $USRBIN ]] && [[ ! "\$PATH" =~ $USRBIN ]]; then
+	export PATH="$USRBIN:\$PATH"
 fi
 
-cat << EOF >> ~/.zshrc
+if [[ -d /usr/share/doc/fzf/examples ]]; then
+	. /usr/share/doc/fzf/examples/completion.zsh
+	. /usr/share/doc/fzf/examples/key-bindings.zsh
+fi
+
 setopt interactive_comments
 setopt print_exit_value
 
-if [[ -r "\$HOME/.zshrc_local" ]]; then . "\$HOME/.zshrc_local"; fi
+if [[ -r ~/.zshrc_local ]]; then . ~/.zshrc_local; fi
 EOF
-
-rm -f ~/.cshrc ~/.login
 
 printf 'done\n'
