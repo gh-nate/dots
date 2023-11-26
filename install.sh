@@ -46,16 +46,13 @@ if [ -r /etc/os-release ]; then
 	. /etc/os-release
 fi
 
-case "$ID" in
-	debian|ubuntu)
-		USRBIN="$HOME/.local/bin"
-		;;
-	*)
-		if [ -z "$ID" ]; then ID=Unknown; fi
-		printf 'Unsupported OS: %s\n' "$ID" >&2
-		exit 1
-		;;
-esac
+if [ "$ID" = debian ] || [ "$ID_LIKE" = debian ]; then
+	USRBIN="$HOME/.local/bin"
+else
+	if [ -z "$ID" ]; then ID=Unknown; fi
+	printf 'Unsupported OS: %s\n' "$ID" >&2
+	exit 1
+fi
 
 if [ -z "$INSTALL_GIT" ] && [ -x /usr/bin/git ]; then
 	INSTALL_GIT=1
