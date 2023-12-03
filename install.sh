@@ -62,6 +62,13 @@ if [ "$INSTALL_GIT" ]; then
 	git config --global alias.fresh 'commit --amend --date=now'
 	git config --global alias.lol 'log --oneline'
 
+	GITCONFIG="$HOME/.config/git"
+	if [ ! -d "$GITCONFIG" ]; then mkdir -p "$GITCONFIG"; fi
+
+	cat <<- EOF > "$GITCONFIG/ignore"
+	*.swp
+	EOF
+
 	if [ ! -d "$USRBIN" ]; then mkdir -p "$USRBIN"; fi
 
 	cat <<- EOF > "$USRBIN/git-new"
