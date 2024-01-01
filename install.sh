@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2023 gh-nate
+# Copyright (c) 2024 gh-nate
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,25 +22,6 @@
 
 set -e
 
-while getopts ghi o; do
-	case "$o" in
-		g) INSTALL_GIT=1 ;;
-		i) INSTALL_IRB=1 ;;
-		h|?) HELP=1 ;;
-	esac
-done
-
-if [ "$HELP" ]; then
-	cat <<- EOF
-	usage: install.sh [-g] [-h] [-i]
-
-	-g force git configuration
-	-h print this help text
-	-i force irb configuration
-	EOF
-	exit 129
-fi
-
 if [ -r /etc/os-release ]; then
 	# shellcheck disable=SC1091
 	. /etc/os-release
@@ -54,11 +35,7 @@ else
 	exit 1
 fi
 
-if [ -z "$INSTALL_GIT" ] && [ -x /usr/bin/git ]; then
-	INSTALL_GIT=1
-fi
-
-if [ "$INSTALL_GIT" ]; then
+if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
 	if [ ! -d "$GITCONFIG" ]; then mkdir -p "$GITCONFIG"; fi
 
@@ -100,11 +77,7 @@ if [ "$INSTALL_GIT" ]; then
 	chmod +x "$USRBIN/git-zap"
 fi
 
-if [ -z "$INSTALL_IRB" ] && [ -x /usr/bin/irb ]; then
-	INSTALL_IRB=1
-fi
-
-if [ "$INSTALL_IRB" ]; then
+if [ -x /usr/bin/irb ]; then
 	cat <<- EOF > ~/.irbrc
 	IRB.conf[:PROMPT_MODE] = :SIMPLE
 	IRB.conf[:SAVE_HISTORY] = nil
