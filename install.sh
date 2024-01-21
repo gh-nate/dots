@@ -138,6 +138,7 @@ nnoremap K <Nop>
 set hlsearch
 set incsearch
 set nowrap
+set shortmess-=S
 set splitbelow
 set splitright
 set viminfo=
