@@ -17,4 +17,4 @@ install
 
 optional
 
-  # apt install fzf git ripgrep ruby vim
+  # apt install fzf git ripgrep vim

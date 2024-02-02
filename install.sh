@@ -77,37 +77,6 @@ if [ -x /usr/bin/git ]; then
 	chmod +x "$USRBIN/git-zap"
 fi
 
-if [ -x /usr/bin/irb ]; then
-	cat <<- EOF > ~/.irbrc
-	IRB.conf[:PROMPT_MODE] = :SIMPLE
-	IRB.conf[:SAVE_HISTORY] = nil
-
-	class Integer
-	  def bin(human_readable = false)
-	    result = to_s(2)
-	    result.chunk if human_readable
-	    result
-	  end
-	  def hex(human_readable = false)
-	    result = to_s(16)
-	    result.chunk if human_readable
-	    result
-	  end
-	end
-
-	class String
-	  def chunk
-	    zfill(4)
-	    (1...length / 4).each { |n| insert(n * 4 + n - 1, " ") }
-	  end
-	  def zfill(n)
-	    remainder = length % n
-	    remainder.zero? ? self : prepend("0" * (n - remainder))
-	  end
-	end
-	EOF
-fi
-
 if [ -r ~/.bashrc ]; then
 	if ! grep -q 'unset HISTFILE' ~/.bashrc; then
 		cat <<- EOF >> ~/.bashrc
