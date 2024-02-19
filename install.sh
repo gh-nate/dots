@@ -42,6 +42,8 @@ if [ -x /usr/bin/git ]; then
 	touch "$GITCONFIG/config"
 	git config --global alias.fresh 'commit --amend --date=now'
 	git config --global alias.lol 'log --oneline'
+	git config --global commit.verbose true
+	git config --global merge.conflictStyle zdiff3
 
 	cat <<- EOF > "$GITCONFIG/ignore"
 	*.swp
