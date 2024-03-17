@@ -22,18 +22,12 @@
 
 set -e
 
-if [ -r /etc/os-release ]; then
-	# shellcheck disable=SC1091
-	. /etc/os-release
-fi
-
-if [ "$ID" = debian ] || [ "$ID_LIKE" = debian ]; then
-	USRBIN="$HOME/.local/bin"
-else
-	if [ -z "$ID" ]; then ID=Unknown; fi
-	printf 'Unsupported OS: %s\n' "$ID" >&2
+if [ ! -f /etc/debian_version ]; then
+	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
+
+USRBIN="$HOME/.local/bin"
 
 if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
