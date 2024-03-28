@@ -3,13 +3,9 @@ gh-nate's dotfiles
 - Focused solely on setting up a minimal command line environment.
 - Everything in a single file for an easier download.
 
-required prerequisites
-
-  # apt install curl
-
 recommended prerequisites
 
-  # apt install tmux zsh
+  # dnf install tmux zsh
 
 install
 
@@ -17,4 +13,12 @@ install
 
 optional
 
-  # apt install fzf git ripgrep vim
+  # dnf install fzf git-core ripgrep vim
+
+recommended optional configuration
+
+  $ cat /etc/dnf/dnf.conf
+  [main]
+  ; ...
+  fastestmirror=True
+  max_parallel_downloads=20

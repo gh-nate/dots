@@ -22,12 +22,18 @@
 
 set -e
 
-if [ ! -f /etc/debian_version ]; then
+if [ ! -f /etc/fedora-release ]; then
 	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
 
 USRBIN="$HOME/.local/bin"
+
+if ! command -v clear > /dev/null; then
+	if [ ! -d "$USRBIN" ]; then mkdir -p "$USRBIN"; fi
+	touch "$USRBIN/clear"
+	chmod +x "$USRBIN/clear"
+fi
 
 if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
@@ -82,8 +88,6 @@ if [ -r ~/.bashrc ]; then
 	fi
 fi
 
-touch ~/.hushlogin
-
 cat << EOF > ~/.tmux.conf
 bind -N 'Split window horizontally: 80-columns pane' '^' splitw -hl 80
 unbind C-z
@@ -107,10 +111,6 @@ set shortmess-=S
 set splitbelow
 set splitright
 set viminfo=
-
-if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
-  source /usr/share/doc/fzf/examples/fzf.vim
-endif
 
 runtime local.vim
 EOF
@@ -142,9 +142,8 @@ if [[ -d $USRBIN ]] && [[ ! "\$PATH" =~ $USRBIN ]]; then
 	export PATH="$USRBIN:\$PATH"
 fi
 
-if [[ -d /usr/share/doc/fzf/examples ]]; then
-	. /usr/share/doc/fzf/examples/completion.zsh
-	. /usr/share/doc/fzf/examples/key-bindings.zsh
+if [[ -r /usr/share/fzf/shell/key-bindings.zsh ]]; then
+	. /usr/share/fzf/shell/key-bindings.zsh
 fi
 
 setopt interactive_comments
