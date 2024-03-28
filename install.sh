@@ -29,12 +29,6 @@ fi
 
 USRBIN="$HOME/.local/bin"
 
-if ! command -v clear > /dev/null; then
-	if [ ! -d "$USRBIN" ]; then mkdir -p "$USRBIN"; fi
-	touch "$USRBIN/clear"
-	chmod +x "$USRBIN/clear"
-fi
-
 if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
 	if [ ! -d "$GITCONFIG" ]; then mkdir -p "$GITCONFIG"; fi

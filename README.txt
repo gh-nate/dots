@@ -22,3 +22,15 @@ recommended optional configuration
   ; ...
   fastestmirror=True
   max_parallel_downloads=20
+
+issue since/with fedora:39 docker image
+
+  # logout
+  /etc/zlogout:7: command not found: clear
+
+workaround
+
+  $ cat /etc/zlogout
+  if command -v clear > /dev/null; then
+    clear
+  fi
