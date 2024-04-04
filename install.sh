@@ -138,6 +138,12 @@ bindkey -e
 
 export LESSHISTFILE=-
 
+function u {
+	sudo apt-get update
+	apt list --upgradable
+	sudo apt-get upgrade
+}
+
 function / {
 	if [[ ! -x /usr/bin/python3 ]]; then
 		sudo apt-get update
