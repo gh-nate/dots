@@ -116,7 +116,7 @@ runtime local.vim
 EOF
 
 cat << EOF > ~/.zlogout
-rm -f ~/.bash_history ~/.lesshst
+rm -f ~/.bash_history ~/.lesshst ~/.python_history
 
 if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
@@ -137,6 +137,14 @@ compinit
 bindkey -e
 
 export LESSHISTFILE=-
+
+function / {
+	if [[ ! -x /usr/bin/python3 ]]; then
+		sudo apt-get update
+		sudo apt-get install -y python3-minimal
+	fi
+	python3 -q
+}
 
 if [[ -d $USRBIN ]] && [[ ! "\$PATH" =~ $USRBIN ]]; then
 	export PATH="$USRBIN:\$PATH"
