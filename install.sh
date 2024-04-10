@@ -51,7 +51,6 @@ if [ -x /usr/bin/git ]; then
 	git switch -c "\$1"
 	git push -u origin "\$1"
 	EOF
-	chmod +x "$USRBIN/git-new"
 
 	cat <<- EOF > "$USRBIN/git-supplant"
 	set -e
@@ -62,7 +61,6 @@ if [ -x /usr/bin/git ]; then
 	git branch -M "\$1"
 	git push --force --set-upstream origin "\$1"
 	EOF
-	chmod +x "$USRBIN/git-supplant"
 
 	cat <<- EOF > "$USRBIN/git-zap"
 	set -e
@@ -70,7 +68,8 @@ if [ -x /usr/bin/git ]; then
 	git branch -D "\$@"
 	git push -d origin "\$@"
 	EOF
-	chmod +x "$USRBIN/git-zap"
+
+	chmod +x "$USRBIN"/git-*
 fi
 
 if [ -r ~/.bashrc ]; then
@@ -121,13 +120,6 @@ rm -f ~/.bash_history ~/.lesshst ~/.python_history
 if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
 
-cat << EOF > ~/.zprofile
-export EDITOR=vi
-export PAGER=less
-
-if [[ -r ~/.zprofile_local ]]; then . ~/.zprofile_local; fi
-EOF
-
 cat << EOF > ~/.zshrc
 alias ll='ls -hAlp'
 
@@ -136,7 +128,13 @@ compinit
 
 bindkey -e
 
+typeset -U path PATH
+path=(~/.local/bin \$path)
+
+export EDITOR=vi
 export LESSHISTFILE=-
+export PAGER=less
+export PATH
 
 function u {
 	sudo apt-get update
@@ -151,10 +149,6 @@ function / {
 	fi
 	python3 -q
 }
-
-if [[ -d $USRBIN ]] && [[ ! "\$PATH" =~ $USRBIN ]]; then
-	export PATH="$USRBIN:\$PATH"
-fi
 
 if [[ -d /usr/share/doc/fzf/examples ]]; then
 	. /usr/share/doc/fzf/examples/completion.zsh
