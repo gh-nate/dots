@@ -128,12 +128,14 @@ compinit
 
 bindkey -e
 
-typeset -U path PATH
-path=(~/.local/bin \$path)
-
 export EDITOR=vi
+export GOBIN="\$HOME/.local/bin"
 export LESSHISTFILE=-
 export PAGER=less
+
+typeset -U path PATH
+path=(\$GOBIN \$path)
+
 export PATH
 
 function u {
