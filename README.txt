@@ -1,7 +1,7 @@
 gh-nate's dotfiles
 
 - Focused solely on setting up a minimal command line environment.
-- Everything in a single file for an easier download.
+- Essentials in a single file for an easier download.
 
 required prerequisites
 
