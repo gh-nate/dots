@@ -27,11 +27,9 @@ if [ ! -f /etc/debian_version ]; then
 	exit 1
 fi
 
-USRBIN="$HOME/.local/bin"
-
 if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
-	if [ ! -d "$GITCONFIG" ]; then mkdir -p "$GITCONFIG"; fi
+	mkdir -p "$GITCONFIG"
 
 	touch "$GITCONFIG/config"
 	git config --global alias.fresh 'commit --amend --date=now'
@@ -42,18 +40,19 @@ if [ -x /usr/bin/git ]; then
 	*.swp
 	EOF
 
-	if [ ! -d "$USRBIN" ]; then mkdir -p "$USRBIN"; fi
+	USRBIN="$HOME/.local/bin"
+	mkdir -p "$USRBIN"
 
-	cat <<- EOF > "$USRBIN/git-new"
-	set -e
+	set_exit_immediately() { printf 'set -e\n\n' > "$1"; }
 
+	set_exit_immediately "$USRBIN/git-new"
+	cat <<- EOF >> "$USRBIN/git-new"
 	git switch -c "\$1"
 	git push -u origin "\$1"
 	EOF
 
-	cat <<- EOF > "$USRBIN/git-supplant"
-	set -e
-
+	set_exit_immediately "$USRBIN/git-supplant"
+	cat <<- EOF >> "$USRBIN/git-supplant"
 	git push -d origin "\$(git rev-parse --abbrev-ref HEAD)"
 	git branch --unset-upstream
 	git branch -D "\$1"
@@ -61,9 +60,8 @@ if [ -x /usr/bin/git ]; then
 	git push --force --set-upstream origin "\$1"
 	EOF
 
-	cat <<- EOF > "$USRBIN/git-zap"
-	set -e
-
+	set_exit_immediately "$USRBIN/git-zap"
+	cat <<- EOF >> "$USRBIN/git-zap"
 	git branch -D "\$@"
 	git push -d origin "\$@"
 	EOF
@@ -92,7 +90,7 @@ source -q ~/.tmux_local.conf
 EOF
 
 VIMCONFIG="$HOME/.vim"
-if [ ! -d "$VIMCONFIG" ]; then mkdir "$VIMCONFIG"; fi
+mkdir -p "$VIMCONFIG"
 
 cat << EOF > "$VIMCONFIG/vimrc"
 nnoremap q <Nop>
