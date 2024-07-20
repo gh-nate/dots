@@ -112,7 +112,7 @@ runtime local.vim
 EOF
 
 cat << EOF > ~/.zlogout
-rm -f ~/.bash_history ~/.lesshst ~/.python_history
+rm -f ~/.{bash,python}_history ~/.lesshst
 
 if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
