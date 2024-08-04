@@ -22,12 +22,26 @@
 
 set -e
 
-if [ ! -f /etc/debian_version ]; then
+if [ -r /etc/os-release ]; then
+	# shellcheck source=/dev/null
+	. /etc/os-release
+	if [ "$ID" = debian ] || [ "$ID_LIKE" = debian ]; then
+		BIN=/usr/bin
+		USRBIN="$HOME/.local/bin"
+	elif [ "$ID" = freebsd ]; then
+		BIN=/usr/local/bin
+		USRBIN="$HOME/bin"
+	else
+		ID=
+	fi
+fi
+
+if [ -z "$ID" ]; then
 	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
 
-if [ -x /usr/bin/git ]; then
+if [ -x "$BIN/git" ]; then
 	GITCONFIG="$HOME/.config/git"
 	mkdir -p "$GITCONFIG"
 
@@ -40,7 +54,6 @@ if [ -x /usr/bin/git ]; then
 	*.swp
 	EOF
 
-	USRBIN="$HOME/.local/bin"
 	mkdir -p "$USRBIN"
 
 	set_exit_immediately() { printf 'set -e\n\n' > "$1"; }
@@ -80,39 +93,74 @@ fi
 
 touch ~/.hushlogin
 
-cat << EOF > ~/.tmux.conf
-bind -N 'Split window horizontally: 80-columns pane' '\`' splitw -hl 80
-unbind C-z
+if [ -x "$BIN/tmux" ]; then
+	cat <<- EOF > ~/.tmux.conf
+	bind -N 'Split window horizontally: 80-columns pane' '\`' splitw -hl 80
+	unbind C-z
 
-set -g renumber-windows on
+	set -g renumber-windows on
 
-source -q ~/.tmux_local.conf
-EOF
+	source -q ~/.tmux_local.conf
+	EOF
+fi
 
 VIMCONFIG="$HOME/.vim"
 mkdir -p "$VIMCONFIG"
 
-cat << EOF > "$VIMCONFIG/vimrc"
-nnoremap q <Nop>
-nnoremap K <Nop>
+if [ -x "$BIN/vi" ]; then
+	VIMCONFIG="$HOME/.vim"
+	mkdir -p "$VIMCONFIG"
 
-set hlsearch
-set incsearch
-set nowrap
-set shortmess-=S
-set splitbelow
-set splitright
-set viminfo=
+	cat <<- EOF > "$VIMCONFIG/vimrc"
+	nnoremap q <Nop>
+	nnoremap K <Nop>
 
-if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
-  source /usr/share/doc/fzf/examples/fzf.vim
-endif
+	set hlsearch
+	set incsearch
+	set nowrap
+	set shortmess-=S
+	set splitbelow
+	set splitright
+	set viminfo=
 
-runtime local.vim
-EOF
+	if filereadable('/usr/share/doc/fzf/examples/fzf.vim')
+	  source /usr/share/doc/fzf/examples/fzf.vim
+	endif
+
+	runtime local.vim
+	EOF
+fi
+
+if [ "$ID" = freebsd ]; then
+	if [ ! -f ~/.nexrc ]; then
+		printf 'set ai ruler\n' > ~/.nexrc
+	fi
+	if [ -r ~/.profile ]; then
+		sed -i '' '/fortune/ { /^#/!s/^/# /; }' ~/.profile
+	fi
+	if [ -r ~/.shrc ]; then
+		if ! grep -q '# gh-nate/dots' ~/.shrc; then
+			cat <<- EOF >> ~/.shrc
+
+			# gh-nate/dots
+
+			alias /=/usr/libexec/flua
+			HISTFILE=
+			export LESSHISTFILE=-
+			rm -f ~/.lldb/lldb-widehistory ~/.lldb/lua-widehistory
+			[ -f ~/.shrc_local ] && . ~/.shrc_local
+			EOF
+		fi
+	fi
+
+	printf 'done\n'
+	exit
+fi
 
 cat << EOF > ~/.zlogout
-rm -f ~/.{bash,python}_history ~/.lesshst
+rm -f \\
+	~/.{bash,python}_history \\
+	~/.lesshst
 
 if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
@@ -126,7 +174,7 @@ compinit
 bindkey -e
 
 export EDITOR=vi
-export GOBIN="\$HOME/.local/bin"
+export GOBIN=$USRBIN
 export LESSHISTFILE=-
 export PAGER=less
 
@@ -142,7 +190,7 @@ function u {
 }
 
 function / {
-	if [[ ! -x /usr/bin/python3 ]]; then
+	if [[ ! -x $BIN/python3 ]]; then
 		sudo apt-get update
 		sudo apt-get install -y python3-minimal
 	fi

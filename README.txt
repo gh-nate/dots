@@ -3,6 +3,11 @@ gh-nate's dotfiles
 - Focused solely on setting up a minimal command line environment.
 - Essentials in a single file for an easier download.
 
+format
+
+  1st command listed is for debian
+  2nd command listed is for freebsd
+
 required prerequisites
 
   # apt install curl
@@ -14,6 +19,7 @@ recommended prerequisites
 install
 
   $ curl -sLS https://github.com/gh-nate/dots/raw/main/install.sh | sh
+  $ fetch -o - https://github.com/gh-nate/dots/raw/main/install.sh | sh
 
 optional
 
