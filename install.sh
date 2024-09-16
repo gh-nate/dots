@@ -81,7 +81,7 @@ fi
 touch ~/.hushlogin
 
 cat << EOF > ~/.tmux.conf
-bind -N 'Split window horizontally: 80-columns pane' '^' splitw -hl 80
+bind -N 'Split window horizontally: 80-columns pane' '\`' splitw -hl 80
 unbind C-z
 
 set -g renumber-windows on
