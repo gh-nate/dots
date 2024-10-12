@@ -142,7 +142,7 @@ function u {
 }
 
 function / {
-	if [[ ! -x /usr/bin/python3 ]]; then
+	if ! whence python3 > /dev/null; then
 		sudo apt-get update
 		sudo apt-get install -y python3-minimal
 	fi
