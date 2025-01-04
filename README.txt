@@ -18,3 +18,4 @@ install
 optional
 
   # apt install fzf git ripgrep vim
+  # snap set system refresh.timer=19:00~20:00
