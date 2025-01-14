@@ -22,10 +22,12 @@
 
 set -e
 
-if [ ! -f /etc/debian_version ]; then
+if [ ! -f /etc/debian_version ] && [ ! -f /etc/arch-release ]; then
 	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
+
+USRBIN="$HOME/.local/bin"
 
 if [ -x /usr/bin/git ]; then
 	GITCONFIG="$HOME/.config/git"
@@ -40,7 +42,6 @@ if [ -x /usr/bin/git ]; then
 	*.swp
 	EOF
 
-	USRBIN="$HOME/.local/bin"
 	mkdir -p "$USRBIN"
 
 	set_exit_immediately() { printf 'set -e\n\n' > "$1"; }
@@ -78,7 +79,9 @@ if [ -r ~/.bashrc ]; then
 	fi
 fi
 
-touch ~/.hushlogin
+if [ -f /etc/debian_version ]; then
+	touch ~/.hushlogin
+fi
 
 cat << EOF > ~/.tmux.conf
 bind -N 'Split window horizontally: 80-columns pane' '\`' splitw -hl 80
@@ -91,6 +94,11 @@ EOF
 
 VIMCONFIG="$HOME/.vim"
 mkdir -p "$VIMCONFIG"
+
+if [ -f /etc/arch-release ]; then
+	mkdir -p "$USRBIN"
+	ln -fs /usr/bin/vim "$USRBIN/vi"
+fi
 
 cat << EOF > "$VIMCONFIG/vimrc"
 nnoremap q <Nop>
@@ -125,7 +133,11 @@ compinit
 
 bindkey -e
 
-export EDITOR=vi
+if [[ -f /etc/arch-release ]]; then
+	export EDITOR=vim
+elif [[ -f /etc/debian_version ]]; then
+	export EDITOR=vi
+fi
 export GOBIN="\$HOME/.local/bin"
 export LESSHISTFILE=-
 export PAGER=less
@@ -136,15 +148,23 @@ path=(\$GOBIN \$path)
 export PATH
 
 function u {
-	sudo apt-get update
-	apt list --upgradable
-	sudo apt-get upgrade
+	if [[ -f /etc/arch-release ]]; then
+		sudo pacman -Syu
+	elif [[ -f /etc/debian_version ]]; then
+		sudo apt-get update
+		apt list --upgradable
+		sudo apt-get upgrade
+	fi
 }
 
 function / {
 	if [[ ! -x /usr/bin/python3 ]]; then
-		sudo apt-get update
-		sudo apt-get install -y python3-minimal
+		if [[ -f /etc/arch-release ]]; then
+			sudo pacman -Sy python
+		elif [[ -f /etc/debian_version ]]; then
+			sudo apt-get update
+			sudo apt-get install -y python3-minimal
+		fi
 	fi
 	python3 -q
 }
@@ -152,6 +172,9 @@ function / {
 if [[ -d /usr/share/doc/fzf/examples ]]; then
 	. /usr/share/doc/fzf/examples/completion.zsh
 	. /usr/share/doc/fzf/examples/key-bindings.zsh
+elif [[ -d /usr/share/fzf ]]; then
+	. /usr/share/fzf/completion.zsh
+	. /usr/share/fzf/key-bindings.zsh
 fi
 
 setopt interactive_comments
