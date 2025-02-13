@@ -139,12 +139,11 @@ if [[ -f /etc/arch-release ]]; then
 elif [[ -f /etc/debian_version ]]; then
 	export EDITOR=vi
 fi
-export GOBIN="\$HOME/.local/bin"
 export LESSHISTFILE=-
 export PAGER=less
 
 typeset -U path PATH
-path=(\$GOBIN \$path)
+path=(\$HOME/.local/bin \$path)
 
 export PATH
 
