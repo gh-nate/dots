@@ -120,7 +120,7 @@ runtime local.vim
 EOF
 
 cat << EOF > ~/.zlogout
-rm -f ~/.{bash,python}_history ~/.lesshst
+rm -f ~/.bash_history ~/.lesshst
 
 if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
@@ -155,18 +155,6 @@ function u {
 		apt list --upgradable
 		sudo apt-get upgrade
 	fi
-}
-
-function / {
-	if [[ ! -x /usr/bin/python3 ]]; then
-		if [[ -f /etc/arch-release ]]; then
-			sudo pacman -Sy python
-		elif [[ -f /etc/debian_version ]]; then
-			sudo apt-get update
-			sudo apt-get install -y python3-minimal
-		fi
-	fi
-	python3 -q
 }
 
 if [[ -d /usr/share/doc/fzf/examples ]]; then

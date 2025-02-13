@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright (c) 2024 gh-nate
+# Copyright (c) 2025 gh-nate
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,21 +22,32 @@
 
 set -e
 
+f="$HOME/.zlogout_local"
+touch "$f"
+if ! grep -q python "$f"; then
+	cat << EOF >> "$f"
+
+rm -f ~/.python_history
+EOF
+fi
+
 f="$HOME/.zshrc_local"
 touch "$f"
-if ! grep -q vcs_info "$f"; then
-	cat <<- EOF >> "$f"
+if ! grep -q python3 "$f"; then
+	cat << EOF >> "$f"
 
-	autoload -Uz vcs_info
-
-	zstyle ':vcs_info:*' enable git
-	zstyle ':vcs_info:git:*' formats "%B(%b)%%b "
-
-	precmd() { vcs_info }
-	PS1='%B%~%b \${vcs_info_msg_0_}%# '
-
-	setopt prompt_subst
-	EOF
+function / {
+	if [[ ! -x /usr/bin/python3 ]]; then
+		if [[ -f /etc/arch-release ]]; then
+			sudo pacman -Sy python
+		elif [[ -f /etc/debian_version ]]; then
+			sudo apt-get update
+			sudo apt-get install -y python3-minimal
+		fi
+	fi
+	python3 -q
+}
+EOF
 fi
 
 printf 'done\n'

@@ -24,8 +24,10 @@ set -e
 
 go telemetry off
 
-if ! grep -q GOPROXY ~/.zshrc_local; then
-	cat << EOF >> ~/.zshrc_local
+f="$HOME/.zshrc_local"
+touch "$f"
+if ! grep -q GOPROXY "$f"; then
+	cat << EOF >> "$f"
 
 gomain() {
 	printf 'package main\nfunc main() {}\n' > main.go
@@ -66,8 +68,8 @@ git clone https://github.com/mmcgrana/gobyexample
 cd gobyexample
 tools/build
 
-if ! grep -q godoc ~/.zshrc_local; then
-	cat << EOF >> ~/.zshrc_local
+if ! grep -q godoc "$f"; then
+	cat << EOF >> "$f" 
 
 if [[ -d "\$GOPATH/gobyexample" ]]; then
 	alias gobyexample="cd \$GOPATH/gobyexample && tools/serve"
