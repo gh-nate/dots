@@ -147,16 +147,6 @@ path=(\$HOME/.local/bin \$path)
 
 export PATH
 
-function u {
-	if [[ -f /etc/arch-release ]]; then
-		sudo pacman -Syu
-	elif [[ -f /etc/debian_version ]]; then
-		sudo apt-get update
-		apt list --upgradable
-		sudo apt-get upgrade
-	fi
-}
-
 if [[ -d /usr/share/doc/fzf/examples ]]; then
 	. /usr/share/doc/fzf/examples/completion.zsh
 	. /usr/share/doc/fzf/examples/key-bindings.zsh
