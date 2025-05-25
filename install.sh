@@ -126,7 +126,6 @@ if [[ -r ~/.zlogout_local ]]; then . ~/.zlogout_local; fi
 EOF
 
 cat << EOF > ~/.zshrc
-alias iv="vi '+se nu'"
 alias ll='ls -hAlp'
 
 autoload -U compinit
