@@ -9,8 +9,8 @@ required prerequisites
 
 recommended prerequisites
 
-  # apt install tmux zsh
-  # pacman -S less man-db tmux zsh
+  # apt install zsh
+  # pacman -S less man-db zsh
 
 install
 
@@ -18,9 +18,9 @@ install
 
 optional
 
-  # apt install fzf git ripgrep vim
+  # apt install fzf git ripgrep tmux vim
   # snap set system refresh.timer=19:00~20:00
 
-  # pacman -S fzf git pacman-contrib ripgrep
+  # pacman -S fzf git pacman-contrib ripgrep tmux
   # systemctl enable paccache.timer
   # systemctl start paccache.timer

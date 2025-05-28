@@ -1,4 +1,3 @@
-#!/bin/sh
 
 # Copyright (c) 2024 gh-nate
 #
@@ -83,15 +82,6 @@ if [ -f /etc/debian_version ]; then
 	touch ~/.hushlogin
 fi
 
-cat << EOF > ~/.tmux.conf
-bind -N 'Split window horizontally: 80-columns pane' '\`' splitw -hl 80
-unbind C-z
-
-set -g renumber-windows on
-
-source -q ~/.tmux_local.conf
-EOF
-
 VIMCONFIG="$HOME/.vim"
 mkdir -p "$VIMCONFIG"
 
@@ -101,6 +91,9 @@ if [ -f /etc/arch-release ]; then
 fi
 
 cat << EOF > "$VIMCONFIG/vimrc"
+nmap \` :vert ter ++cols=80<CR>
+nmap t :tab ter<CR>
+
 nnoremap q <Nop>
 nnoremap K <Nop>
 
