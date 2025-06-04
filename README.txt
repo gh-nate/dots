@@ -14,7 +14,7 @@ recommended prerequisites
 
 install
 
-  $ curl -sLS https://github.com/gh-nate/dots/raw/main/install.sh | sh
+  $ curl --proto '=https' --tlsv1.2 -fsLS https://github.com/gh-nate/dots/raw/main/install.sh | sh
 
 optional
 
