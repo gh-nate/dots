@@ -33,20 +33,21 @@ fi
 
 f="$HOME/.zshrc_local"
 touch "$f"
-if ! grep -q python3 "$f"; then
+if ! grep -q python "$f"; then
 	cat << EOF >> "$f"
 
 function / {
-	if [[ ! -x /usr/bin/python3 ]]; then
-		if [[ -f /etc/arch-release ]]; then
-			sudo pacman -Sy python
-		elif [[ -f /etc/debian_version ]]; then
-			sudo apt-get update
-			sudo apt-get install -y python3-minimal
-		fi
+	if [[ -f /etc/arch-release ]] && [[ ! -x /usr/bin/uv ]]; then
+		sudo pacman -Sy uv
+	elif [[ -f /etc/debian_version ]] && [[ ! -x ~/.local/bin/uv ]]; then
+		curl --proto '=https' --tlsv1.2 -fsLS https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+		uv generate-shell-completion zsh > ~/.uv.zsh
+		uvx --generate-shell-completion zsh >> ~/.uv.zsh
 	fi
-	python3 -q
+	uv run python -q
 }
+
+if [[ -r ~/.uv.zsh ]]; then . ~/.uv.zsh; fi
 EOF
 fi
 

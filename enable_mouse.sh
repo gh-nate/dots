@@ -24,7 +24,7 @@ set -e
 
 ensure_line_in_file() {
 	if ! test -f "$2"; then
-		touch "$2"
+		return
 	fi
 
 	if ! grep -q "$1" "$2"; then
