@@ -44,6 +44,14 @@ if [ -x /usr/bin/git ]; then
 
 	set_exit_immediately() { printf 'set -e\n\n' > "$1"; }
 
+	set_exit_immediately "$USRBIN/git-bs"
+	cat <<- EOF >> "$USRBIN/git-bs"
+	if [ "\$3" = -f ]
+	then git show "\$(git blame -L\$1,+1 \$2|awk '{print \$1}')"
+	else git blame -L\$1,+1 \$2
+	fi
+	EOF
+
 	set_exit_immediately "$USRBIN/git-new"
 	cat <<- EOF >> "$USRBIN/git-new"
 	git switch -c "\$1"
