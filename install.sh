@@ -58,6 +58,12 @@ if [ -x /usr/bin/git ]; then
 	git push -u origin "\$1"
 	EOF
 
+	set_exit_immediately "$USRBIN/git-sitrep"
+	cat <<- EOF >> "$USRBIN/git-sitrep"
+	git status -s
+	git log --no-decorate --oneline -1
+	EOF
+
 	set_exit_immediately "$USRBIN/git-supplant"
 	cat <<- EOF >> "$USRBIN/git-supplant"
 	git push -d origin "\$(git rev-parse --abbrev-ref HEAD)"
