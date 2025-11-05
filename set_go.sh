@@ -38,7 +38,7 @@ export GOPROXY='direct'
 EOF
 fi
 
-if [ "$1" = "--offline" ]; then
+if [ "$1" = "--no-docs" ]; then
 	printf 'done\n'
 	exit
 fi
@@ -51,6 +51,8 @@ fi
 mkdir -p "$GOPATH"
 cd "$GOPATH"
 
+curl -o spec.html https://go.dev/ref/spec
+
 export GOPROXY='direct'
 
 if [ ! "$GOBIN" ]; then
@@ -59,25 +61,75 @@ if [ ! "$GOBIN" ]; then
 fi
 
 go install golang.org/x/pkgsite/cmd/pkgsite@latest
+
+if [ -f /etc/arch-release ]; then
+	pkgsite_path=/usr/lib/go/src
+elif [ -f /etc/debian_version ]; then
+	if [ -x /usr/bin/go ]; then
+		for pkgsite_path in /usr/share/go-*/src; do true; done
+	fi
+	while [ ! -d "$pkgsite_path" ]; do
+		printf 'PATHS for pkgsite (hint: ends with something like go/src): '
+		read -r pkgsite_path
+	done
+fi
+
+dir="$HOME/.config/systemd/user"
+mkdir -p "$dir"
+
+service=pkgsite.service
+printf '[Service]\n' > "$dir/$service"
+
+if [ -f /etc/debian_version ] && [ ! -x /usr/bin/go ]; then
+	# shellcheck disable=SC2046
+	printf 'Environment=PATH=%s\n' $(dirname $(command -v go)) >> "$dir/$service"
+fi
+
+cat << EOF >> "$dir/$service"
+ExecStart=$GOBIN/pkgsite -http 127.0.0.1:8001 $pkgsite_path
+
+[Install]
+WantedBy=default.target
+EOF
+
 go install golang.org/x/website/tour@latest
 mv "$GOBIN/tour" "$GOBIN/gotour"
 
-curl -o spec.html https://go.dev/ref/spec
+service=gotour.service
+cat << EOF > "$dir/$service"
+[Service]
+ExecStart=$GOBIN/gotour -http 127.0.0.1:8002 -openbrowser=0
 
-git clone https://github.com/mmcgrana/gobyexample
+[Install]
+WantedBy=default.target
+EOF
+
+if [ ! -d "$GOPATH/gobyexample" ]; then
+	git clone https://github.com/mmcgrana/gobyexample
+fi
 cd gobyexample
+git pull -p
 tools/build
 
-if ! grep -q godoc "$f"; then
-	cat << EOF >> "$f" 
+service=gobyexample.service
+printf '[Service]\n' > "$dir/$service"
 
-if [[ -d "\$GOPATH/gobyexample" ]]; then
-	alias gobyexample="cd \$GOPATH/gobyexample && tools/serve"
+if [ -f /etc/debian_version ] && [ ! -x /usr/bin/go ]; then
+	# shellcheck disable=SC2046
+	printf 'Environment=PATH=/usr/bin:%s\n' $(dirname $(command -v go)) >> "$dir/$service"
 fi
-if [[ -d /usr/lib/go/src ]]; then
-	alias godoc='pkgsite /usr/lib/go/src'
-fi
+
+cat << EOF >> "$dir/$service"
+ExecStart=$GOPATH/gobyexample/tools/serve
+WorkingDirectory=$GOPATH/gobyexample
+
+[Install]
+WantedBy=default.target
 EOF
-fi
+
+systemctl --user enable --now \
+	gobyexample.service \
+	gotour.service \
+	pkgsite.service
 
 printf 'done\n'
