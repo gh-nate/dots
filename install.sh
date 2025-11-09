@@ -98,9 +98,6 @@ if [ -f /etc/arch-release ]; then
 fi
 
 cat << EOF > "$VIMCONFIG/vimrc"
-nmap \` :vert ter ++cols=80<CR>
-nmap t :tab ter<CR>
-
 nnoremap q <Nop>
 nnoremap K <Nop>
 
