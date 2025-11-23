@@ -62,17 +62,13 @@ fi
 
 go install golang.org/x/pkgsite/cmd/pkgsite@latest
 
-if [ -f /etc/arch-release ]; then
-	pkgsite_path=/usr/lib/go/src
-elif [ -f /etc/debian_version ]; then
-	if [ -x /usr/bin/go ]; then
-		for pkgsite_path in /usr/share/go-*/src; do true; done
-	fi
-	while [ ! -d "$pkgsite_path" ]; do
-		printf 'PATHS for pkgsite (hint: ends with something like go/src): '
-		read -r pkgsite_path
-	done
+if [ -x /usr/bin/go ]; then
+	for pkgsite_path in /usr/share/go-*/src; do true; done
 fi
+while [ ! -d "$pkgsite_path" ]; do
+	printf 'PATHS for pkgsite (hint: ends with something like go/src): '
+	read -r pkgsite_path
+done
 
 dir="$HOME/.config/systemd/user"
 mkdir -p "$dir"
@@ -80,7 +76,7 @@ mkdir -p "$dir"
 service=pkgsite.service
 printf '[Service]\n' > "$dir/$service"
 
-if [ -f /etc/debian_version ] && [ ! -x /usr/bin/go ]; then
+if [ ! -x /usr/bin/go ]; then
 	# shellcheck disable=SC2046
 	printf 'Environment=PATH=%s\n' $(dirname $(command -v go)) >> "$dir/$service"
 fi
@@ -114,7 +110,7 @@ tools/build
 service=gobyexample.service
 printf '[Service]\n' > "$dir/$service"
 
-if [ -f /etc/debian_version ] && [ ! -x /usr/bin/go ]; then
+if [ ! -x /usr/bin/go ]; then
 	# shellcheck disable=SC2046
 	printf 'Environment=PATH=/usr/bin:%s\n' $(dirname $(command -v go)) >> "$dir/$service"
 fi

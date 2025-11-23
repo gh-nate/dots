@@ -37,9 +37,7 @@ if ! grep -q python "$f"; then
 	cat << EOF >> "$f"
 
 function / {
-	if [[ -f /etc/arch-release ]] && [[ ! -x /usr/bin/uv ]]; then
-		sudo pacman -Sy uv
-	elif [[ -f /etc/debian_version ]] && [[ ! -x ~/.local/bin/uv ]]; then
+	if [[ ! -x ~/.local/bin/uv ]]; then
 		curl --proto '=https' --tlsv1.2 -fsLS https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
 		uv generate-shell-completion zsh > ~/.uv.zsh
 		uvx --generate-shell-completion zsh >> ~/.uv.zsh
