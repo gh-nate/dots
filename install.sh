@@ -98,9 +98,10 @@ if [ -f /etc/arch-release ]; then
 fi
 
 cat << EOF > "$VIMCONFIG/vimrc"
-nnoremap q <Nop>
+nnoremap q <Cmd>checktime<CR>
 nnoremap K <Nop>
 
+set autoread
 set hlsearch
 set incsearch
 set nowrap
