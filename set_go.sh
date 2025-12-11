@@ -33,6 +33,10 @@ gomain() {
 	printf 'package main\nfunc main() {}\n' > main.go
 }
 
+govf() {
+	go vet "\$@" && go fmt "\$@"
+}
+
 export GOBIN="\$HOME/.local/bin"
 export GOPROXY='direct'
 EOF
