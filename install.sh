@@ -20,7 +20,7 @@
 
 set -e
 
-if [ ! -f /etc/debian_version ] && [ ! -f /etc/arch-release ]; then
+if [ ! -f /etc/debian_version ]; then
 	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
@@ -85,17 +85,10 @@ if [ -r ~/.bashrc ]; then
 	fi
 fi
 
-if [ -f /etc/debian_version ]; then
-	touch ~/.hushlogin
-fi
+touch ~/.hushlogin
 
 VIMCONFIG="$HOME/.vim"
 mkdir -p "$VIMCONFIG"
-
-if [ -f /etc/arch-release ]; then
-	mkdir -p "$USRBIN"
-	ln -fs /usr/bin/vim "$USRBIN/vi"
-fi
 
 cat << EOF > "$VIMCONFIG/vimrc"
 nnoremap q <Cmd>checktime<CR>
@@ -131,11 +124,7 @@ compinit
 
 bindkey -e
 
-if [[ -f /etc/arch-release ]]; then
-	export EDITOR=vim
-elif [[ -f /etc/debian_version ]]; then
-	export EDITOR=vi
-fi
+export EDITOR=vi
 export LESSHISTFILE=-
 export PAGER=less
 
@@ -147,9 +136,6 @@ export PATH
 if [[ -d /usr/share/doc/fzf/examples ]]; then
 	. /usr/share/doc/fzf/examples/completion.zsh
 	. /usr/share/doc/fzf/examples/key-bindings.zsh
-elif [[ -d /usr/share/fzf ]]; then
-	. /usr/share/fzf/completion.zsh
-	. /usr/share/fzf/key-bindings.zsh
 fi
 
 setopt interactive_comments
