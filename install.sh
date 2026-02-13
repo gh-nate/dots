@@ -74,6 +74,18 @@ if [ -x /usr/bin/git ]; then
 	EOF
 
 	chmod +x "$USRBIN"/git-*
+
+	f="$HOME/.zshrc_local"
+	touch "$f"
+	if ! grep -q 'git aliases' "$f"; then
+		cat <<- EOF >> "$f"
+
+		# git aliases
+		alias g='git'
+		alias g!='git push -f'
+		alias g\?='git status'
+		EOF
+	fi
 fi
 
 if [ -r ~/.bashrc ]; then
