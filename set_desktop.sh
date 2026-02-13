@@ -36,4 +36,30 @@ if command -v ghostty > /dev/null; then
 	EOF
 fi
 
+if command -v flatpak > /dev/null; then
+	if flatpak info dev.zed.Zed 2> /dev/null; then
+		mkdir -p ~/.var/app/dev.zed.Zed/config/zed/
+		cat <<- EOF > ~/.var/app/dev.zed.Zed/config/zed/settings.json
+{
+    "terminal": {
+        "font_family": "Ubuntu Mono"
+    },
+    "ui_font_family": "Ubuntu Sans",
+    "buffer_font_family": "Ubuntu Mono",
+    "ui_font_size": 16,
+    "buffer_font_size": 15,
+    "theme": {
+        "mode": "system",
+        "light": "Rosé Pine Dawn",
+        "dark": "Rosé Pine",
+    },
+    "telemetry": {
+        "diagnostics": false,
+        "metrics": false,
+    },
+}
+		EOF
+	fi
+fi
+
 printf 'done\n'
