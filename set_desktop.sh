@@ -37,9 +37,22 @@ if command -v ghostty > /dev/null; then
 fi
 
 if command -v flatpak > /dev/null; then
-	if flatpak info dev.zed.Zed 2> /dev/null; then
-		mkdir -p ~/.var/app/dev.zed.Zed/config/zed/
-		cat <<- EOF > ~/.var/app/dev.zed.Zed/config/zed/settings.json
+	id=dev.zed.Zed
+	if flatpak info "$id" 2> /dev/null; then
+		f="$HOME/.zshrc_local"
+		touch "$f"
+		if ! grep zed "$f"; then
+			cat <<- EOF >> "$f"
+
+			alias fpz='flatpak run $id'
+			if [[ \$ZED_TERM ]]; then
+				export GIT_EDITOR='flatpak run $id --wait'
+			fi
+			EOF
+		fi
+
+		mkdir -p "$HOME/.var/app/$id/config/zed/"
+		cat <<- EOF > "$HOME/.var/app/$id/config/zed/settings.json"
 {
     "terminal": {
         "font_family": "Ubuntu Mono"
