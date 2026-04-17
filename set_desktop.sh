@@ -28,8 +28,6 @@ if command -v ghostty > /dev/null; then
 	mkdir -p ~/.config/ghostty
 	cat <<- EOF > ~/.config/ghostty/config
 	adjust-cell-height = 15%
-	font-family = Ubuntu Mono
-	font-size = 14
 	theme = light:Rose Pine Dawn,dark:Rose Pine
 	window-padding-x = 10
 	window-padding-y = 10
@@ -54,18 +52,6 @@ if command -v flatpak > /dev/null; then
 		mkdir -p "$HOME/.var/app/$id/config/zed/"
 		cat <<- EOF > "$HOME/.var/app/$id/config/zed/settings.json"
 {
-    "terminal": {
-        "font_family": "Ubuntu Mono"
-    },
-    "ui_font_family": "Ubuntu Sans",
-    "buffer_font_family": "Ubuntu Mono",
-    "ui_font_size": 16,
-    "buffer_font_size": 15,
-    "theme": {
-        "mode": "system",
-        "light": "Rosé Pine Dawn",
-        "dark": "Rosé Pine",
-    },
     "telemetry": {
         "diagnostics": false,
         "metrics": false,
