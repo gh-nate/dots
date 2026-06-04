@@ -1,4 +1,4 @@
-gh-nate's dotfiles for debian linux
+gh-nate's dotfiles
 
 optional
 

@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -22,43 +22,25 @@
 
 set -eu
 
-if [[ ! -f /etc/debian_version ]]; then
-	printf 'unsupported operating system\n' >&2
-	exit 1
+cat << EOF >> ~/.shrc
+
+alias ll='ls -hAlp'
+
+HISTFILE=
+LESSHISTFILE='-'
+export LESSHISTFILE
+
+if [ -r ~/.shrc_local ]
+then . ~/.shrc_local
 fi
+EOF
 
-usrbin="$HOME/.local/bin"
-mkdir -p "$usrbin"
-ln -fs "$PWD/bin/u.bash" "$usrbin/u"
+mkdir -p ~/bin
+ln -fs /usr/libexec/flua ~/bin/lua
 
-if [[ -x /usr/bin/git ]]; then
-	gitcfg="$HOME/.config/git"
-	mkdir -p "$gitcfg"
+cat << EOF > ~/.nexrc
+set autoindent
+set number
+EOF
 
-	touch "$gitcfg/config"
-	git config --global alias.fp 'push -f'
-	git config --global alias.fresh 'commit --amend --date=now'
-	git config --global alias.lol 'log --oneline'
-	git config --global alias.s 'status'
-	git config --global alias.u 'pull --prune'
-	git config --global commit.verbose true
-
-	for s in bs new supplant zap
-	do ln -fs "$PWD/bin/git/$s.bash" "$usrbin/git-$s"
-	done
-
-	f="$HOME/.zshrc_local"
-	touch "$f"
-	if ! grep -q 'alias g=git' "$f"; then
-		cat <<- EOF >> "$f"
-
-		alias g=git
-		EOF
-	fi
-fi
-
-sudo apt-get update
-sudo apt-get install -y zsh
-ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
-
-printf "\nPlease run 'history -c' before logout.\n"
+echo 'done'
