@@ -22,19 +22,36 @@
 
 set -eu
 
-if [[ ! -f /etc/debian_version ]]; then
-	printf 'unsupported operating system\n' >&2
-	exit 1
-fi
+gitcfg="$HOME/.config/git"
+mkdir -p "$gitcfg"
+
+touch "$gitcfg/config"
+git config --global alias.fp 'push -f'
+git config --global alias.fresh 'commit --amend --date=now'
+git config --global alias.lol 'log --oneline'
+git config --global alias.s 'status'
+git config --global alias.u 'pull --prune'
+git config --global commit.verbose true
 
 usrbin="$HOME/.local/bin"
+if [[ -r /etc/os-release ]]; then
+	# shellcheck disable=SC1091
+	. /etc/os-release
+	if [[ "$ID" = freebsd ]]; then
+		usrbin="$HOME/bin"
+	fi
+fi
 mkdir -p "$usrbin"
-ln -fs "$PWD/bin/u.bash" "$usrbin/u"
 
-if [[ -x /usr/bin/git ]]; then bash git.bash; fi
+for s in bs new supplant zap
+do ln -fs "$PWD/bin/git/$s.bash" "$usrbin/git-$s"
+done
 
-sudo apt-get update
-sudo apt-get install -y zsh
-ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
+f="$HOME/.zshrc_local"
+touch "$f"
+if ! grep -q 'alias g=git' "$f"; then
+	cat <<- EOF >> "$f"
 
-printf "\nplease run 'history -c' before logging out.\n"
+	alias g=git
+	EOF
+fi
