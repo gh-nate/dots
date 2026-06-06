@@ -18,49 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-alias ll='ls -hAlp'
+export PATH="/opt/homebrew/bin:$PATH"
+export SHELL_SESSIONS_DISABLE=1
 
-autoload -U compinit
-compinit
-
-bindkey -e
-
-if [[ -x /opt/homebrew/bin/brew ]]; then
-	export HOMEBREW_NO_AUTO_UPDATE=1
-	export HOMEBREW_NO_ANALYTICS=1
-	export HOMEBREW_NO_INSECURE_REDIRECT=1
-	export HOMEBREW_NO_INSTALL_CLEANUP=1
-fi
-
-export LESSHISTFILE=-
-export PAGER=less
-export PYTHON_HISTORY=/dev/null
-
-typeset -U path PATH
-if [[ -d ~/.local/bin ]]; then path=($HOME/.local/bin $path); fi
-
-export PATH
-
-if [[ -d /usr/share/doc/fzf/examples ]]; then
-	. /usr/share/doc/fzf/examples/completion.zsh
-	. /usr/share/doc/fzf/examples/key-bindings.zsh
-fi
-
-setopt interactive_comments
-setopt print_exit_value
-
-# PS1 {
-autoload -Uz vcs_info
-
-zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' formats "%B(%b)%%b "
-
-precmd() { vcs_info }
-PS1='%B%~%b ${vcs_info_msg_0_}%# '
-
-setopt prompt_subst
-# } PS1
-
-unset HISTFILE
-
-if [[ -r ~/.zshrc_local ]]; then . ~/.zshrc_local; fi
+eval "$(brew shellenv)"

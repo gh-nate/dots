@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
 # Copyright (c) 2026 gh-nate
 #
@@ -22,6 +22,11 @@
 
 set -e
 
-sudo apt-get update
-apt list --upgradable
-sudo apt-get upgrade
+if [[ -f /etc/debian_version ]]; then
+	sudo apt-get update
+	apt list --upgradable
+	sudo apt-get upgrade
+elif [[ -f /etc/bashrc_Apple_Terminal ]]; then
+	brew update
+	brew upgrade
+fi
