@@ -30,7 +30,7 @@ export PAGER=less
 export PYTHON_HISTORY=/dev/null
 
 typeset -U path PATH
-path=($HOME/.local/bin $path)
+if [[ -d ~/.local/bin ]]; then path=($HOME/.local/bin $path); fi
 
 export PATH
 

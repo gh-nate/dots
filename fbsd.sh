@@ -43,4 +43,8 @@ set autoindent
 set number
 EOF
 
+if [ -r "$PWD/zsh/rc.zsh" ]
+then ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
+fi
+
 echo 'done'
