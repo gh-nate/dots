@@ -36,5 +36,6 @@ if [[ -x /usr/bin/git ]]; then bash git.bash; fi
 sudo apt-get update
 sudo apt-get install -y zsh
 ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
+chsh -s /usr/bin/zsh
 
 printf "\nplease run 'history -c' before logging out.\n"

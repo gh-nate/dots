@@ -46,5 +46,8 @@ EOF
 if [ -r "$PWD/zsh/rc.zsh" ]
 then ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 fi
+if [ -x /usr/local/bin/zsh ]
+then chsh -s /usr/local/bin/zsh
+fi
 
 echo 'done'
