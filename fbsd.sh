@@ -50,4 +50,8 @@ if [ -x /usr/local/bin/zsh ]
 then chsh -s /usr/local/bin/zsh
 fi
 
+if [ -r "$PWD/tmux.conf" ]
+then ln -fs "$PWD/tmux.conf" ~/.tmux.conf
+fi
+
 echo 'done'

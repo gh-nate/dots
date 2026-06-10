@@ -36,4 +36,8 @@ if [ -x /usr/bin/git ]; then bash git.bash; fi
 ln -fs "$PWD/zsh/profile.zsh" ~/.zprofile
 ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 
+tmx="$HOME/.config/tmux"
+mkdir -p "$tmx"
+ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
+
 printf 'done\n'
