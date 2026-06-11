@@ -29,6 +29,7 @@ fi
 
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
+ln -fs "$PWD/bin/t.sh" "$usrbin/t"
 ln -fs "$PWD/bin/u.bash" "$usrbin/u"
 
 if [[ -x /usr/bin/git ]]; then bash git.bash; fi

@@ -22,39 +22,4 @@
 
 set -eu
 
-cat << EOF >> ~/.shrc
-
-alias ll='ls -hAlp'
-
-HISTFILE=
-LESSHISTFILE='-'
-export LESSHISTFILE
-
-if [ -r ~/.shrc_local ]
-then . ~/.shrc_local
-fi
-EOF
-
-mkdir -p ~/bin
-ln -fs /usr/libexec/flua ~/bin/lua
-
-cat << EOF > ~/.nexrc
-set autoindent
-set number
-EOF
-
-if [ -r "$PWD/zsh/rc.zsh" ]
-then ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
-fi
-if [ -x /usr/local/bin/zsh ]
-then chsh -s /usr/local/bin/zsh
-fi
-
-if [ -r "$PWD/bin/t.sh" ]
-then ln -fs "$PWD/bin/t.sh" ~/bin/t
-fi
-if [ -r "$PWD/tmux.conf" ]
-then ln -fs "$PWD/tmux.conf" ~/.tmux.conf
-fi
-
-echo 'done'
+exec tmux new -A -c "$1" -s "$(basename "$1")"
