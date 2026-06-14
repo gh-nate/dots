@@ -22,7 +22,8 @@
 
 set -eu
 
-cat << EOF >> ~/.shrc
+if ! grep .shrc_local ~/.shrc > /dev/null
+then cat << EOF >> ~/.shrc
 
 alias ll='ls -hAlp'
 
@@ -34,6 +35,7 @@ if [ -r ~/.shrc_local ]
 then . ~/.shrc_local
 fi
 EOF
+fi
 
 mkdir -p ~/bin
 ln -fs /usr/libexec/flua ~/bin/lua
