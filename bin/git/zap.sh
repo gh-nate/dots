@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -20,38 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -eu
+set -e
 
-gitcfg="$HOME/.config/git"
-mkdir -p "$gitcfg"
-
-touch "$gitcfg/config"
-git config --global alias.fp 'push -f'
-git config --global alias.fresh 'commit --amend --date=now'
-git config --global alias.lol 'log --oneline'
-git config --global alias.s 'status'
-git config --global alias.u 'pull --prune'
-git config --global commit.verbose true
-
-usrbin="$HOME/.local/bin"
-if [[ -r /etc/os-release ]]; then
-	# shellcheck disable=SC1091
-	. /etc/os-release
-	if [[ "$ID" = freebsd ]]; then
-		usrbin="$HOME/bin"
-	fi
-fi
-mkdir -p "$usrbin"
-
-for s in bs new supplant zap
-do ln -fs "$PWD/bin/git/$s.bash" "$usrbin/git-$s"
-done
-
-f="$HOME/.zshrc_local"
-touch "$f"
-if ! grep -q 'alias g=git' "$f"; then
-	cat <<- EOF >> "$f"
-
-	alias g=git
-	EOF
-fi
+git branch -D "$@"
+git push -d origin "$@"

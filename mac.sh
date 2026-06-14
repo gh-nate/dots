@@ -29,9 +29,9 @@ fi
 
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
-ln -fs "$PWD/bin/u.bash" "$usrbin/u"
+ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
-if [ -x /usr/bin/git ]; then bash git.bash; fi
+if [ -x /usr/bin/git ]; then sh git.sh; fi
 
 ln -fs "$PWD/zsh/profile.zsh" ~/.zprofile
 ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc

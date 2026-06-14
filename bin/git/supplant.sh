@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -20,7 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -e
+set -eu
 
-git branch -D "$@"
-git push -d origin "$@"
+git push -d origin "$(git rev-parse --abbrev-ref HEAD)"
+git branch --unset-upstream
+git branch -D "$1"
+git branch -M "$1"
+git push --force --set-upstream origin "$1"

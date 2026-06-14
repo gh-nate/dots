@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -20,10 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -eu
+set -e
 
-git push -d origin "$(git rev-parse --abbrev-ref HEAD)"
-git branch --unset-upstream
-git branch -D "$1"
-git branch -M "$1"
-git push --force --set-upstream origin "$1"
+if [ -f /etc/debian_version ]; then
+	sudo apt-get update
+	apt list --upgradable
+	sudo apt-get upgrade
+elif [ -f /etc/bashrc_Apple_Terminal ]; then
+	brew update
+	brew upgrade
+fi

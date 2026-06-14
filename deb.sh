@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -22,7 +22,7 @@
 
 set -eu
 
-if [[ ! -f /etc/debian_version ]]; then
+if [ ! -f /etc/debian_version ]; then
 	printf 'unsupported operating system\n' >&2
 	exit 1
 fi
@@ -30,9 +30,9 @@ fi
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
 ln -fs "$PWD/bin/t.sh" "$usrbin/t"
-ln -fs "$PWD/bin/u.bash" "$usrbin/u"
+ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
-if [[ -x /usr/bin/git ]]; then bash git.bash; fi
+if [ -x /usr/bin/git ]; then sh git.sh; fi
 
 sudo apt-get update
 sudo apt-get install -y zsh

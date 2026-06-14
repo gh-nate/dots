@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Copyright (c) 2026 gh-nate
 #
@@ -22,11 +22,7 @@
 
 set -e
 
-if [[ -f /etc/debian_version ]]; then
-	sudo apt-get update
-	apt list --upgradable
-	sudo apt-get upgrade
-elif [[ -f /etc/bashrc_Apple_Terminal ]]; then
-	brew update
-	brew upgrade
+if [ "$3" = -f ]
+then git show "$(git blame -L"$1",+1 "$2"|awk '{print $1}')"
+else git blame -L"$1",+1 "$2"
 fi
