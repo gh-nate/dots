@@ -22,4 +22,11 @@
 
 set -eu
 
+if test "$1" = -e; then
+	shift
+	if test -x ~/bin/t; then
+		exec tmux new -A -c "$1" -s "$(basename "$1")" vi
+	fi
+	exec tmux new -A -c "$1" -s "$(basename "$1")" nvim '+se nu'
+fi
 exec tmux new -A -c "$1" -s "$(basename "$1")"
