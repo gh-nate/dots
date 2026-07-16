@@ -44,7 +44,7 @@ fi
 mkdir -p "$usrbin"
 
 for s in bs new supplant zap
-do ln -fs "$PWD/bin/git/$s.sh" "$usrbin/git-$s"
+do ln -fs "$PWD/bin/git.sh" "$usrbin/git-$s"
 done
 
 f="$HOME/.zshrc_local"

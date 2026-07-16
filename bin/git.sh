@@ -20,7 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set -eu
+set -e
 
-git switch -c "$1"
-git push -u origin "$1"
+case "$0" in
+    *-bs)
+        if [ "$3" = -f ]
+        then git show "$(git blame -L"$1",+1 "$2"|awk '{print $1}')"
+        else git blame -L"$1",+1 "$2"
+        fi
+        ;;
+    *-new)
+        set -u
+        git switch -c "$1"
+        git push -u origin "$1"
+        ;;
+    *-supplant)
+        set -u
+        git push -d origin "$(git rev-parse --abbrev-ref HEAD)"
+        git branch --unset-upstream
+        git branch -D "$1"
+        git branch -M "$1"
+        git push --force --set-upstream origin "$1"
+        ;;
+    *-zap)
+        git branch -D "$@"
+        git push -d origin "$@"
+        ;;
+esac
