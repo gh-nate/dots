@@ -40,4 +40,7 @@ tmx="$HOME/.config/tmux"
 mkdir -p "$tmx"
 ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
 
+mkdir -p ~/.vim
+ln -fs "$PWD/rc.vim" ~/.vim/vimrc
+
 printf 'done\n'
