@@ -34,10 +34,6 @@ git config --global alias.u 'pull --prune'
 git config --global commit.verbose true
 
 usrbin="$HOME/.local/bin"
-if [ -r /etc/os-release ]; then
-	# shellcheck disable=SC1091
-	. /etc/os-release
-fi
 mkdir -p "$usrbin"
 
 for s in bs new supplant zap

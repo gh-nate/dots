@@ -22,7 +22,9 @@
 
 set -e
 
-if [ -f /etc/debian_version ]; then
+if [ -f /etc/arch-release ]; then
+	sudo pacman -Syu
+elif [ -f /etc/debian_version ]; then
 	sudo apt-get update
 	apt list --upgradable
 	sudo apt-get upgrade

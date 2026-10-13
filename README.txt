@@ -2,4 +2,6 @@ gh-nate's dotfiles
 
 optional
 
-  # apt install fzf git ripgrep tmux vim
+  # apt install fwupd fzf git ripgrep tmux vim
+  # pacman -Sy less fwupd fzf git ripgrep tmux
+
