@@ -46,4 +46,8 @@ mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 ln -fs /usr/bin/vim "$usrbin/vi"
 
+sudo pacman -Sy pacman-contrib
+sudo systemctl enable paccache.timer
+sudo systemctl start paccache.timer
+
 printf "\nplease run 'history -c' before logging out.\n"
