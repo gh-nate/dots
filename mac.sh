@@ -36,10 +36,6 @@ if [ -x /usr/bin/git ]; then sh git.sh; fi
 ln -fs "$PWD/zsh/profile.zsh" ~/.zprofile
 ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 
-tmx="$HOME/.config/tmux"
-mkdir -p "$tmx"
-ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
-
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 

@@ -29,6 +29,6 @@ elif [ -f /etc/debian_version ]; then
 	apt list --upgradable
 	sudo apt-get upgrade
 elif [ -f /etc/bashrc_Apple_Terminal ]; then
-	brew update
-	brew upgrade
+	sudo pkgin -y update
+	sudo pkgin upgrade
 fi

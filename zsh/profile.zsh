@@ -18,7 +18,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-export PATH="/opt/homebrew/bin:$PATH"
 export SHELL_SESSIONS_DISABLE=1
-
-eval "$(brew shellenv)"
