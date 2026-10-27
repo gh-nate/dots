@@ -25,6 +25,9 @@ compinit
 
 bindkey -e
 
+if [[ -x /usr/bin/vim ]] && [[ ! $EDITOR ]]; then
+	export EDITOR=vim
+fi
 export LESSHISTFILE=-
 export PAGER=less
 export PYTHON_HISTORY=/dev/null
