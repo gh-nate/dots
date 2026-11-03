@@ -44,7 +44,10 @@ ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
 
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
-ln -fs /usr/bin/vim "$usrbin/vi"
+
+sudo pacman -Sy busybox
+ln -fs /usr/bin/busybox "$usrbin/less"
+ln -fs /usr/bin/busybox "$usrbin/vi"
 
 sudo pacman -Sy pacman-contrib
 sudo systemctl enable paccache.timer
