@@ -34,7 +34,7 @@ ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
 if [ -x /usr/bin/git ]; then sh git.sh; fi
 
-sudo pacman -Sy zsh
+sudo pacman -S zsh
 ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 chsh -s /usr/bin/zsh
 
@@ -45,11 +45,11 @@ ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 
-sudo pacman -Sy busybox
+sudo pacman -S busybox
 ln -fs /usr/bin/busybox "$usrbin/less"
 ln -fs /usr/bin/busybox "$usrbin/vi"
 
-sudo pacman -Sy pacman-contrib
+sudo pacman -S pacman-contrib
 sudo systemctl enable paccache.timer
 sudo systemctl start paccache.timer
 
