@@ -35,6 +35,7 @@ if has("viminfo")
 endif
 
 set autoread
+set backspace=indent,eol,start
 set splitbelow
 set splitright
 set nowrap

@@ -47,7 +47,9 @@ ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 
 sudo pacman -S busybox
 ln -fs /usr/bin/busybox "$usrbin/less"
-ln -fs /usr/bin/busybox "$usrbin/vi"
+if [ ! -x "$usrbin/vi" ]; then
+	ln -fs /usr/bin/busybox "$usrbin/vi"
+fi
 
 sudo pacman -S pacman-contrib
 sudo systemctl enable paccache.timer
