@@ -35,11 +35,6 @@ if [[ -d ~/.local/bin ]]; then path=($HOME/.local/bin $path); fi
 
 export PATH
 
-if [[ -d /usr/share/doc/fzf/examples ]]; then
-	. /usr/share/doc/fzf/examples/completion.zsh
-	. /usr/share/doc/fzf/examples/key-bindings.zsh
-fi
-
 setopt interactive_comments
 setopt print_exit_value
 
