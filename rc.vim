@@ -54,8 +54,9 @@ if executable("fzy")
   endfunction
 
   nnoremap <leader>e :call FzyCommand("find . -type f", ":e")<cr>
-  nnoremap <leader>v :call FzyCommand("find . -type f", ":vs")<cr>
   nnoremap <leader>s :call FzyCommand("find . -type f", ":sp")<cr>
+  nnoremap <leader>t :call FzyCommand("find . -type f", ":tabe")<cr>
+  nnoremap <leader>v :call FzyCommand("find . -type f", ":vs")<cr>
 endif
 
 runtime local.vim

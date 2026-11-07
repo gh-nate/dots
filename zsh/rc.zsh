@@ -18,6 +18,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+alias gr='grep -nI'
+grd() {
+	if [[ -f pyproject.toml ]]; then
+		gr \
+			--exclude-dir=.git \
+			--exclude-dir=__pycache__ \
+			--exclude-dir='.*_cache' \
+			-r "$@" .
+	else
+		gr -r --exclude-dir=.git "$@" .
+	fi
+}
 alias ll='ls -hAlp'
 
 autoload -U compinit
