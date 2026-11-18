@@ -29,6 +29,7 @@ elif [ -f /etc/debian_version ]; then
 	apt list --upgradable
 	sudo apt-get upgrade
 elif [ -f /etc/bashrc_Apple_Terminal ]; then
-	sudo pkgin -y update
-	sudo pkgin upgrade
+	nix-channel --update
+	nix-env --upgrade --dry-run
+	printf 'Run nix-env --upgrade if desired\n'
 fi
