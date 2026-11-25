@@ -29,6 +29,7 @@ fi
 
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
+ln -fs "$PWD/bin/snippets.sh" "$usrbin/snippets"
 ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
 if [ -x /usr/bin/git ]; then sh git.sh; fi
@@ -38,5 +39,7 @@ ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
+
+ln -fs "$PWD/guile.scm" ~/.guile
 
 printf 'done\n'

@@ -29,6 +29,7 @@ fi
 
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
+ln -fs "$PWD/bin/snippets.sh" "$usrbin/snippets"
 ln -fs "$PWD/bin/t.sh" "$usrbin/t"
 ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
@@ -45,5 +46,7 @@ ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
 
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
+
+ln -fs "$PWD/guile.scm" ~/.guile
 
 printf "\nplease run 'history -c' before logging out.\n"

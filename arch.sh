@@ -29,6 +29,7 @@ fi
 
 usrbin="$HOME/.local/bin"
 mkdir -p "$usrbin"
+ln -fs "$PWD/bin/snippets.sh" "$usrbin/snippets"
 ln -fs "$PWD/bin/t.sh" "$usrbin/t"
 ln -fs "$PWD/bin/u.sh" "$usrbin/u"
 
@@ -54,5 +55,7 @@ fi
 sudo pacman -S pacman-contrib
 sudo systemctl enable paccache.timer
 sudo systemctl start paccache.timer
+
+ln -fs "$PWD/guile.scm" ~/.guile
 
 printf "\nplease run 'history -c' before logging out.\n"
