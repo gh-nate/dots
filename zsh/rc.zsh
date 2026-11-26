@@ -39,7 +39,6 @@ compinit
 bindkey -e
 
 export EDITOR=vim
-export GUILE_HISTORY=
 export LESSHISTFILE=-
 export PAGER=less
 export PYTHON_HISTORY=/dev/null

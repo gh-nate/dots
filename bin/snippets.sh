@@ -25,10 +25,8 @@ set -eu
 case "$1" in
 	*.scm)
 		cat << EOF > "$1"
-#!/usr/bin/env guile -s
-!#
-(display "Hello, world!")
-(newline)
+#!$(command -v csi) -script
+(print "Hello, world!")
 EOF
 		chmod +x "$1"
 	;;

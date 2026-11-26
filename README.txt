@@ -2,6 +2,6 @@ gh-nate's dotfiles
 
 optional
 
-  # apt install amd64-microcode fwupd fzy git guile-3.0 intel-microcode tmux vim
-  # pacman -S amd-ucode guile intel-ucode man-db fwupd fzy
+  # apt install amd64-microcode chicken-bin fwupd fzy git intel-microcode tmux vim
+  # pacman -S chicken amd-ucode intel-ucode man-db fwupd fzy
 

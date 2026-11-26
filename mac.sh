@@ -40,6 +40,4 @@ ln -fs "$PWD/zsh/rc.zsh" ~/.zshrc
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 
-ln -fs "$PWD/guile.scm" ~/.guile
-
 printf 'done\n'

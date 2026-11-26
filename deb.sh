@@ -47,6 +47,4 @@ ln -fs "$PWD/tmux.conf" "$tmx/tmux.conf"
 mkdir -p ~/.vim
 ln -fs "$PWD/rc.vim" ~/.vim/vimrc
 
-ln -fs "$PWD/guile.scm" ~/.guile
-
 printf "\nplease run 'history -c' before logging out.\n"

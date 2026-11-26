@@ -56,6 +56,6 @@ sudo pacman -S pacman-contrib
 sudo systemctl enable paccache.timer
 sudo systemctl start paccache.timer
 
-ln -fs "$PWD/guile.scm" ~/.guile
+ln -fs /usr/bin/chicken-csi "$usrbin/csi"
 
 printf "\nplease run 'history -c' before logging out.\n"
